@@ -100,3 +100,11 @@ class EbnakCreateReportErrorState extends EbnakStates {}
 
 
 
+
+
+class EbnakDetectionImagePickedSuccessState extends EbnakStates {}
+
+class EbnakDetectionImagePickedErrorState extends EbnakStates {}
+
+
+class EbnakRemoveDetectionImageState extends EbnakStates {}

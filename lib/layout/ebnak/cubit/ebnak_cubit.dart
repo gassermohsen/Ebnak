@@ -584,6 +584,27 @@ Future<addFaceModel?> addFace(
 
 
 
+  File? DetectionImage;
+
+  Future<void> getDetectionImage() async {
+
+    final  XFile? pickedImage = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedImage != null) {
+      DetectionImage = File(pickedImage.path);
+      print(pickedImage.path);
+      emit(EbnakDetectionImagePickedSuccessState());
+    } else {
+      print('No image selected.');
+      emit(EbnakDetectionImagePickedErrorState());
+    }
+  }
+
+
+
+  void removeDetectionImage(){
+    DetectionImage=null;
+    emit(EbnakRemoveDetectionImageState());
+  }
 
 
 
