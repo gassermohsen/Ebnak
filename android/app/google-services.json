@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "985330412674",
+    "project_id": "ebnak-305a8",
+    "storage_bucket": "ebnak-305a8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:985330412674:android:ac999a390429e81fe9189b",
+        "android_client_info": {
+          "package_name": "com.example.ebnak1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "985330412674-b52utv6g96nmccesnk4sgke4mi3pdkdj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.ebnak1",
+            "certificate_hash": "935509111dd41acb4d7b2380af828a840be2b169"
+          }
+        },
+        {
+          "client_id": "985330412674-matnb8oj87p77lemfc4lb669eiasoovo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBUwUNgJ_smwpigxNZ746Ncc-PK-sXfsd0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "985330412674-matnb8oj87p77lemfc4lb669eiasoovo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
