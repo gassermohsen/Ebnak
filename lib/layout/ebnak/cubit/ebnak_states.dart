@@ -108,3 +108,31 @@ class EbnakDetectionImagePickedErrorState extends EbnakStates {}
 
 
 class EbnakRemoveDetectionImageState extends EbnakStates {}
+
+class EbnakListTrainedSuccessState extends EbnakStates {}
+
+
+
+// create Detection
+class EbnakDetectionLoadingState extends EbnakStates {}
+class EbnakDetectionSuccessState extends EbnakStates {}
+class EbnakDetectionErrorState extends EbnakStates {}
+
+
+
+// face Detection
+class EbnakFaceDetectLoadingState extends EbnakStates {}
+class EbnakFaceDetectSuccessState extends EbnakStates {}
+class EbnakFaceDetectErrorState extends EbnakStates {}
+
+
+// find Similar
+class EbnakFindSimilarLoadingState extends EbnakStates {}
+class EbnakFindSimilarSuccessState extends EbnakStates {}
+class EbnakFindSimilarErrorState extends EbnakStates {}
+
+
+// get Detected
+class EbnakGetDetectedLoadingState extends EbnakStates {}
+class EbnakGetDetectedSuccessState extends EbnakStates {}
+class EbnakGetDetectedErrorState extends EbnakStates {}

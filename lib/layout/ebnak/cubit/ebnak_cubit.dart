@@ -1,16 +1,18 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:core' as core;
+import 'dart:core';
 import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ebnak1/Screens/Home/home_Screen.dart';
 import 'package:ebnak1/Screens/adopt/adoption_Screen.dart';
-
 import 'package:ebnak1/Screens/community/community_Screen.dart';
 import 'package:ebnak1/Screens/missing/missing_Screen.dart';
 import 'package:ebnak1/Screens/profile/profile_screen.dart';
 import 'package:ebnak1/constants/constants.dart';
 import 'package:ebnak1/models/adoption_model.dart';
+import 'package:ebnak1/models/findSimilar_model.dart';
 import 'package:ebnak1/models/post_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,6 +22,7 @@ import '../../../Screens/adopt/repository/adoption_repository.dart';
 import '../../../Screens/community/community_Screen_test.dart';
 import '../../../Screens/community/community_screen_test2.dart';
 import '../../../models/addFace_model.dart';
+import '../../../models/detectFace_model.dart';
 import '../../../models/reportMissing_model.dart';
 import '../../../models/user_model.dart';
 import 'ebnak_states.dart';
@@ -559,7 +562,7 @@ Future<addFaceModel?> addFace(
     )async{
   var headers = {
     'Content-Type': 'application/json',
-    'Ocp-Apim-Subscription-Key': '8f1f397a90dc4a87856c9a4f5dad4b98'
+    'Ocp-Apim-Subscription-Key': Subscription_Key,
   };
   var request = http.Request('POST', Uri.parse('https://childarity.cognitiveservices.azure.com/face/v1.0/largefacelists/ebnak_01/persistedfaces?detectionModel=detection_03'));
   request.body = json.encode({
@@ -584,6 +587,11 @@ Future<addFaceModel?> addFace(
 
 
 
+
+  // Detection Section
+
+  DetectFaceModel? DetectModel;
+
   File? DetectionImage;
 
   Future<void> getDetectionImage() async {
@@ -605,6 +613,166 @@ Future<addFaceModel?> addFace(
     DetectionImage=null;
     emit(EbnakRemoveDetectionImageState());
   }
+
+
+
+
+
+  Future trainList()async{
+    var headers = {
+      'Ocp-Apim-Subscription-Key': Subscription_Key
+    };
+    var request = http.Request('POST', Uri.parse('https://childarity.cognitiveservices.azure.com/face/v1.0/largefacelists/ebnak_01/train'));
+    request.body = '''''';
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      print('List Trained Successfully');
+      emit(EbnakListTrainedSuccessState());
+      print(await response.stream.bytesToString());
+    }
+    else {
+      print(response.reasonPhrase);
+    }
+
+  }
+
+
+  void UploadDetectionImage(){
+
+
+    emit(EbnakDetectionLoadingState());
+    firebase_storage.FirebaseStorage.instance
+        .ref()
+        .child('Detection/${Uri.file(DetectionImage!.path).pathSegments.last}')
+        .putFile(DetectionImage!)
+        .then((value) {
+      value.ref.getDownloadURL().then((value)async {
+        // emit(EbnakUploadProfileImageSuccessState());
+        print(value);
+         trainList();
+        await detectFace(value);
+        await FindSimilar(DetectModel?.faceId);
+        getDetection();
+
+
+
+      }).catchError((onError){
+        print(onError.toString());
+        emit(EbnakDetectionErrorState());
+      });
+    })
+        .catchError((onError){
+      print(onError.toString());
+
+      emit(EbnakDetectionErrorState());
+
+    });
+
+
+  }
+
+
+  Future <DetectFaceModel?>detectFace(
+
+      String? url,
+      )async{
+
+emit(EbnakFaceDetectLoadingState());
+    var headers = {
+      'Content-Type': 'application/json',
+      'Ocp-Apim-Subscription-Key': Subscription_Key
+    };
+    var request = http.Request('POST', Uri.parse('https://childarity.cognitiveservices.azure.com/face/v1.0/detect?returnFaceId=true&returnFaceLandmarks=false&recognitionModel=recognition_04&returnRecognitionModel=false&detectionModel=detection_03&faceIdTimeToLive=86400'));
+    request.body = json.encode({
+      "url": url
+    });
+    request.headers.addAll(headers);
+
+    var streamedResponse = await request.send();
+    var response = await http.Response.fromStream(streamedResponse);
+
+    if (response.statusCode == 200) {
+      emit(EbnakFaceDetectSuccessState());
+
+      print(await response.body.toString());
+      final responsebody=json.decode(response.body);
+
+      DetectModel=DetectFaceModel.fromJson(responsebody[0]);
+      print(DetectModel?.faceId);
+    }
+    else {
+      print(response.reasonPhrase);
+      emit(EbnakFaceDetectErrorState());
+
+    }
+
+  }
+
+
+List<FindSimilarModel> findSimilarModel=[];
+
+  Future FindSimilar(
+      String? faceID,
+      )async{
+emit(EbnakFindSimilarLoadingState());
+
+    var headers = {
+      'Content-Type': 'application/json',
+      'Ocp-Apim-Subscription-Key': Subscription_Key
+    };
+    var request = http.Request('POST', Uri.parse('https://childarity.cognitiveservices.azure.com/face/v1.0/findsimilars'));
+    request.body = json.encode({
+      "faceId": faceID,
+      "largeFaceListId": "ebnak_01",
+      "maxNumOfCandidatesReturned": 2,
+      "mode": "matchPerson"
+    });
+    request.headers.addAll(headers);
+
+    var streamedResponse = await request.send();
+    var response = await http.Response.fromStream(streamedResponse);
+
+    if (response.statusCode == 200) {
+      emit(EbnakFindSimilarSuccessState());
+
+      print(await response.body.toString());
+      List responsebody=json.decode(response.body);
+      for(int i=0;i<2;i++){
+      findSimilarModel= responsebody.map((face) => new FindSimilarModel.fromJson(face)).toList() ;
+      }
+      print(findSimilarModel[0].persistedFaceId);
+      print(findSimilarModel[0].confidence);
+    }
+    else {
+      emit(EbnakFindSimilarErrorState());
+
+      print(response.reasonPhrase);
+    }
+    
+  }
+
+ late List<reportMissingModel>getDetectionInfo;
+  
+  void getDetection(){
+    emit(EbnakGetDetectedLoadingState());
+    FirebaseFirestore.instance.collection('Reports').where("persistedFaceId",whereIn:[findSimilarModel[0].persistedFaceId,findSimilarModel[1].persistedFaceId] )
+        .get()
+        .then((value) {
+          emit(EbnakGetDetectedSuccessState());
+          getDetectionInfo=[];
+          value.docs.forEach((element) {
+            getDetectionInfo.add(reportMissingModel.FromJson(element.data()));
+            print(getDetectionInfo.length);
+          });
+    }).catchError((onError){
+      emit(EbnakGetDetectedErrorState());
+      print(onError);
+    });
+  }
+
 
 
 

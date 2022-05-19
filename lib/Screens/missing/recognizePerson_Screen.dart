@@ -19,7 +19,7 @@ class RecognizePersonScreen extends StatelessWidget {
     return BlocConsumer<EbnakCubit, EbnakStates>(
       listener: (context, state) {
         if(EbnakCubit.get(context).DetectionImage!=null)
-          navigateTo(context, ImageDetectionScreen());
+          PushReplacment(context, ImageDetectionScreen());
       },
       builder: (context, state) {
 

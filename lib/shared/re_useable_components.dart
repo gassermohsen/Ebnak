@@ -13,6 +13,12 @@ void navigateAndFinish(
     )=>
     Navigator.pushAndRemoveUntil(context,MaterialPageRoute(builder:(context)=>widget),(route) => false);
 
+void PushReplacment(
+    context,
+    widget,
+    )=>
+    Navigator.pushReplacement(context,MaterialPageRoute(builder:(context)=>widget));
+
 
 
 

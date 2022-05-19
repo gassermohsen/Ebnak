@@ -1,4 +1,3 @@
-import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -37,18 +36,18 @@ class reportMissingModel{
     this.persistedFaceId,
   });
   reportMissingModel.FromJson(Map<String,dynamic>?json){
-    name=json!['name'];
-    email=json!['email'];
-    fullName=json!['fullName'];
-    Age=json!['Age'];
-    MissingAddress=json!['MissingAddress'];
-    phoneNumber=json!['phoneNumber'];
-    Information=json!['Information'];
-    reportMissingImage=json!['reportMissingImage'];
-    image=json!['image'];
-    uID=json!['uID'];
-    dateTime=json!['dateTime'];
-    persistedFaceId=json!['persistedFaceId'];
+    name=json?['name'];
+    email=json?['email'];
+    fullName=json?['fullName'];
+    Age=json?['Age'];
+    MissingAddress=json?['MissingAddress'];
+    phoneNumber=json?['phoneNumber'];
+    Information=json?['Information'];
+    reportMissingImage=json?['reportMissingImage'];
+    image=json?['image'];
+    uID=json?['uID'];
+    dateTime=json?['dateTime'];
+    persistedFaceId=json?['persistedFaceId'];
 
 
 
