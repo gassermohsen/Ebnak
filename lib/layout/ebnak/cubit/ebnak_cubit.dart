@@ -64,7 +64,7 @@ EbnakUserModel? userModel;
    List<Widget>screens=[
      HomeScreen(),
      adoptionScreen(),
-     communityScreentest2(),
+     communityScreentest(),
      missingScreen(),
      profileScreen(),
    ];
@@ -355,6 +355,28 @@ EbnakUserModel? userModel;
     });
   }
 
+  void CommentPost(String postId,String comment){
+    FirebaseFirestore.instance
+        .collection('posts')
+        .doc(postId)
+        .collection('comments')
+        .doc(userModel?.uID)
+        .set({
+      'comment':comment,
+      'name':userModel?.name,
+      'userID':userModel?.uID,
+      'userImage':userModel?.image,
+      'userEmail':userModel?.email,
+      'time':Timestamp.now().toString(),
+    })
+        .then((value) {
+      emit(EbnakLikePostSuccessState());
+    })
+        .catchError((onError){
+      emit(EbnakLikePostErrorState(onError.toString()));
+    });
+  }
+
 
 
 
@@ -386,32 +408,40 @@ EbnakUserModel? userModel;
 
 
   Stream<QuerySnapshot<Map<String, dynamic>>> trytogetPosts() {
-
     return FirebaseFirestore.instance
         .collection('posts')
+        .orderBy('dateTime')
         .snapshots();
+  }
 
+  Future getLikes()async{
 
-
+    for(int i=0;i<posts.length;i++){
+         FirebaseFirestore.instance.collection('posts')
+        .doc(PostsIds[i])
+        .collection('likes')
+        .get()
+        .then((event) {
+          Likes=[];
+       Likes.add(event.docs.length);
+       print(event.docs.length);
+    });
+    }
   }
   void addFunction(){
       trytogetPosts().listen((event) {
 
         posts=[];
         Likes=[];
+        PostsIds=[];
         event.docs.forEach((element) {
-
-
         element.reference.collection('likes')
             .snapshots()
-            .forEach((event) {
-
-
-          Likes.add(event.docs.length);
-          PostsIds.add(element.id);
-          posts.add(PostModel.FromJson(element.data()));
-
+            .listen((value) {
+          Likes.add(value.docs.length);
         });
+        posts.add(PostModel.FromJson(element.data()));
+        PostsIds.add(element.id);
 
 
       });
@@ -423,6 +453,7 @@ EbnakUserModel? userModel;
       });
 
   }
+
 
 
 
@@ -727,7 +758,7 @@ emit(EbnakFindSimilarLoadingState());
     request.body = json.encode({
       "faceId": faceID,
       "largeFaceListId": "ebnak_01",
-      "maxNumOfCandidatesReturned": 2,
+      "maxNumOfCandidatesReturned": 1,
       "mode": "matchPerson"
     });
     request.headers.addAll(headers);
@@ -740,9 +771,11 @@ emit(EbnakFindSimilarLoadingState());
 
       print(await response.body.toString());
       List responsebody=json.decode(response.body);
-      for(int i=0;i<2;i++){
+      for(int i=0;i<1;i++){
       findSimilarModel= responsebody.map((face) => new FindSimilarModel.fromJson(face)).toList() ;
       }
+
+
       print(findSimilarModel[0].persistedFaceId);
       print(findSimilarModel[0].confidence);
     }
@@ -754,24 +787,80 @@ emit(EbnakFindSimilarLoadingState());
     
   }
 
+
+
  late List<reportMissingModel>getDetectionInfo;
+
+
   
   void getDetection(){
     emit(EbnakGetDetectedLoadingState());
-    FirebaseFirestore.instance.collection('Reports').where("persistedFaceId",whereIn:[findSimilarModel[0].persistedFaceId,findSimilarModel[1].persistedFaceId] )
-        .get()
-        .then((value) {
-          emit(EbnakGetDetectedSuccessState());
-          getDetectionInfo=[];
-          value.docs.forEach((element) {
-            getDetectionInfo.add(reportMissingModel.FromJson(element.data()));
-            print(getDetectionInfo.length);
-          });
-    }).catchError((onError){
-      emit(EbnakGetDetectedErrorState());
-      print(onError);
-    });
+      FirebaseFirestore.instance.collection('Reports').where(
+          "persistedFaceId", whereIn: [findSimilarModel[0].persistedFaceId,])
+          .get()
+          .then((value) {
+        emit(EbnakGetDetectedSuccessState());
+        getDetectionInfo = [];
+        value.docs.forEach((element) {
+          getDetectionInfo.add(reportMissingModel.FromJson(element.data()));
+          print(getDetectionInfo.length);
+        });
+      }).catchError((onError) {
+        emit(EbnakGetDetectedErrorState());
+        print(onError);
+      });
+
   }
+
+
+
+
+  Map<String, int> postsLikesbymap = ({});
+
+  Future<void> getAllposts() async{
+
+    PostsIds=[];
+    posts=[];
+    postsLikesbymap = ({});
+    emit(EbnakGetPostsLoadingState());
+
+    FirebaseFirestore.instance.collection('posts')
+    .orderBy('dateTime')
+    .get()
+    .then((value) {
+      value.docs.forEach((element) {
+        element.reference.collection('likes').get().then((value) {
+          postsLikesbymap.addAll({element.id: value.docs.length});
+          PostsIds.add(element.id);
+        });
+        posts.add(PostModel.FromJson(element.data()));
+        emit(EbnakGetPostsSuccessState());
+
+      });
+    }).catchError((onError){
+      emit(EbnakGetPostsErrorState(onError));
+    });
+
+
+  }
+
+
+  void getSinglePost(String postId) {
+    emit(EbnakGetSinglePostsLoadingState());
+    FirebaseFirestore.instance.collection('posts')
+    .doc(postId)
+    .get()
+    .then((value) {
+      value.reference.collection('Likes').get().then((value) {
+        postsLikesbymap[postId] = value.docs.length;
+
+    });
+  }).catchError((onError){
+    emit(EbnakGetSinglePostsErrorState(onError));
+    });
+    }
+
+
 
 
 

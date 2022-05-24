@@ -43,66 +43,72 @@ class communityScreen extends StatelessWidget {
             ),
           ),
           body: ConditionalBuilder(
-            condition: EbnakCubit.get(context).posts.length>0&&EbnakCubit.get(context).userModel!=null,
-            builder: (context) =>SingleChildScrollView(
+            condition: EbnakCubit.get(context).userModel!=null,
+            builder: (context) =>RefreshIndicator(
 
-              physics: BouncingScrollPhysics(),
-              child: Column(
+              onRefresh: () => EbnakCubit.get(context).getAllposts(),
+              displacement: 20,
+              edgeOffset: 20,
+              child: SingleChildScrollView(
 
-                children: [
+                physics: BouncingScrollPhysics(),
+                child: Column(
+
+                  children: [
 
 
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    child: Card(
-                      clipBehavior: Clip.antiAliasWithSaveLayer,
-                      elevation: 10.0,
-                      margin: EdgeInsets.all(8.0),
-                      child: Stack(
-                        alignment: AlignmentDirectional.center,
-                        children:[
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      child: Card(
+                        clipBehavior: Clip.antiAliasWithSaveLayer,
+                        elevation: 10.0,
+                        margin: EdgeInsets.all(8.0),
+                        child: Stack(
+                          alignment: AlignmentDirectional.center,
+                          children:[
 
-                          Image(
-                            width: double.infinity,
-                          image: NetworkImage(
-                            'https://img.freepik.com/free-photo/diverse-hands-touching-white-paper_53876-98411.jpg?t=st=1649852964~exp=1649853564~hmac=bb082dc5ec8330732421c84e5dc2c7048874a02424686f62c3008f5e55eee81b&w=1380'
+                            Image(
+                              width: double.infinity,
+                            image: NetworkImage(
+                              'https://img.freepik.com/free-photo/diverse-hands-touching-white-paper_53876-98411.jpg?t=st=1649852964~exp=1649853564~hmac=bb082dc5ec8330732421c84e5dc2c7048874a02424686f62c3008f5e55eee81b&w=1380'
+                            ),
+                            fit: BoxFit.cover,
+                            height: getProportionateScreenHeight(200),
                           ),
-                          fit: BoxFit.cover,
-                          height: getProportionateScreenHeight(200),
+                            Text(
+                              'Share your thoughts and advice ',
+
+                            )
+                             ],
                         ),
-                          Text(
-                            'Share your thoughts and advice ',
-
-                          )
-                           ],
                       ),
+
+
+                    ),
+                    ListView.separated(
+
+                        itemBuilder: (context,index)=> buildPostItem(EbnakCubit.get(context).posts[index], EbnakCubit.get(context).postsLikesbymap, EbnakCubit.get(context).PostsIds[index],context,index),
+                        itemCount: EbnakCubit.get(context).posts.length,
+                        physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap:  true,
+                      separatorBuilder: (context,index)=>SizedBox(
+                        height: getProportionateScreenHeight(8),
+                      ),
+
+                    ),
+                    SizedBox(
+                      height: 55.0,
                     ),
 
 
-                  ),
-                  ListView.separated(
-
-                      itemBuilder: (context,index)=> buildPostItem(EbnakCubit.get(context).posts[index],context,index),
-                      itemCount: EbnakCubit.get(context).posts.length,
-                      physics: NeverScrollableScrollPhysics(),
-                    shrinkWrap:  true,
-                    separatorBuilder: (context,index)=>SizedBox(
-                      height: getProportionateScreenHeight(8),
-                    ),
-
-                  ),
-                  SizedBox(
-                    height: 55.0,
-                  ),
 
 
 
+                  ],
 
-
-                ],
+                ),
 
               ),
-
             ),
             fallback: (context)=>Center(child: CircularProgressIndicator()),
           ),
@@ -113,7 +119,7 @@ class communityScreen extends StatelessWidget {
 
   }
 
-  Widget buildPostItem(PostModel model,context,index)=> Card(
+  Widget buildPostItem(PostModel model,Map<String, int> likes,String postId,context,index)=> Card(
       clipBehavior: Clip.antiAliasWithSaveLayer,
       elevation: 5.0,
       margin: EdgeInsets.symmetric(horizontal: 8),
@@ -270,7 +276,7 @@ class communityScreen extends StatelessWidget {
                               width: getProportionateScreenWidth(5),
                             ),
                             Text(
-                              '${EbnakCubit.get(context).Likes[index]}',
+                              likes[postId].toString(),
                               style: Theme.of(context).textTheme.caption,
                             )
 

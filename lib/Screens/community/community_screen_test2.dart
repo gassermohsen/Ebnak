@@ -156,6 +156,7 @@ class _communityScreentest2State extends State<communityScreentest2> {
 
 
 Widget buildPostItem(PostModel model,context,index)=> Card(
+
     clipBehavior: Clip.antiAliasWithSaveLayer,
     elevation: 5.0,
     margin: EdgeInsets.symmetric(horizontal: 8),

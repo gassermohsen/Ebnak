@@ -17,14 +17,14 @@ class reportMissingModel{
   String? persistedFaceId;
 
 
-  String? reportMissingImage;
+ late String reportMissingImage;
 
   reportMissingModel({
     required this.name,
     this.email,
 
     this.fullName,
-    this.reportMissingImage,
+    required this.reportMissingImage,
     this.uID,
     this.dateTime,
     this.image,

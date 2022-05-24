@@ -57,6 +57,19 @@ class EbnakGetPostsErrorState extends EbnakStates
 }
 
 
+
+class EbnakGetSinglePostsLoadingState extends EbnakStates {}
+
+class EbnakGetSinglePostsSuccessState extends EbnakStates {}
+
+class EbnakGetSinglePostsErrorState extends EbnakStates
+{
+  final String error;
+
+  EbnakGetSinglePostsErrorState(this.error);
+}
+
+
 class EbnakLikePostSuccessState extends EbnakStates {}
 
 class EbnakLikePostErrorState extends EbnakStates
