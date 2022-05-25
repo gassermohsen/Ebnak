@@ -5,12 +5,30 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:cupertino_icons/cupertino_icons.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 import '../../constants/constants.dart';
 import '../../styles/icon_broken.dart';
 
 class ChildDetailsScreen extends StatelessWidget {
   const ChildDetailsScreen({Key? key}) : super(key: key);
+
+final double lat=25.3622;
+  final double lng=86.0835;
+
+  Future<void >launchMap()async{
+    final String googleMapsUrl="https:/www.google.com/maps/search/?api=1&query=$lat,$lng";
+
+    if (await canLaunchUrlString(googleMapsUrl)) {
+    await launchUrlString(googleMapsUrl);
+    } else {
+    throw "Error occured trying to call that number.";
+    }
+  }
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -253,7 +271,10 @@ class ChildDetailsScreen extends StatelessWidget {
                   children: [
                     Padding(
                       padding: const EdgeInsets.only(left: 20.0,top: 30),
-                      child: OutlinedButton(onPressed: (){},
+                      child: OutlinedButton(onPressed: ()async{
+                        launchMap();
+
+                      },
 
                           child:Text('Locate Me',style: TextStyle(color: Colors.black54), )
                       ),
@@ -261,7 +282,19 @@ class ChildDetailsScreen extends StatelessWidget {
 
                     Padding(
                       padding: const EdgeInsets.only(left: 15.0,),
-                      child: OutlinedButton(onPressed: (){},
+                      child: OutlinedButton(onPressed: ()async{
+
+                        String telephoneNumber = '01150168031';
+                        String telephoneUrl = "tel:$telephoneNumber";
+
+                        if (await canLaunchUrlString(telephoneUrl)) {
+                          await launchUrlString(telephoneUrl);
+                        } else {
+                          throw "Error occured trying to call that number.";
+                        }
+
+
+                      },
 
                           child:Text('Contact Orghanage',style: TextStyle(color: Colors.black54), )
                       ),
@@ -326,10 +359,10 @@ class ChildDetailsScreen extends StatelessWidget {
           ],
         ),
       ),
-      
 
 
-      
+
+
     );
   }
 }

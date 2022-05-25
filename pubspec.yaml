@@ -53,8 +53,8 @@ dependencies:
   screenshot: ^1.2.3
   image_gallery_saver: ^1.7.1
   permission_handler: ^9.2.0
-
-
+  carousel_slider: ^4.1.1
+  url_launcher: ^6.1.2
 
 
 

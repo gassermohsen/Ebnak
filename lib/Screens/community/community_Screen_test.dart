@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:ebnak1/Size_config/size_config.dart';
@@ -16,6 +17,7 @@ import '../new_post/new_post_screen.dart';
 
 class communityScreentest extends StatelessWidget {
   TextEditingController commentController = TextEditingController();
+  final controller=CarouselController();
 
   @override
   Widget build(BuildContext context) {
@@ -63,46 +65,99 @@ class communityScreentest extends StatelessWidget {
                     children: [
 
 
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                        child: Card(
-                          clipBehavior: Clip.antiAliasWithSaveLayer,
-                          elevation: 10.0,
-                          margin: EdgeInsets.all(8.0),
-                          child: Stack(
-                            alignment: AlignmentDirectional.center,
-                            children: [
+                      Card(
+                        clipBehavior: Clip.antiAliasWithSaveLayer,
+                        elevation: 10.0,
+                        margin: EdgeInsets.all(8.0),
+                        child: Stack(
+                          alignment: AlignmentDirectional.center,
+                          children: [
 
-                              Image(
-                                width: double.infinity,
-                                image: NetworkImage(
-                                    'https://img.freepik.com/free-photo/diverse-hands-touching-white-paper_53876-98411.jpg?t=st=1649852964~exp=1649853564~hmac=bb082dc5ec8330732421c84e5dc2c7048874a02424686f62c3008f5e55eee81b&w=1380'
+                            SizedBox(
+                              width: double.infinity,
+
+                              child: CarouselSlider(
+                                    carouselController: controller,
+                                options: CarouselOptions(
+                                  enlargeCenterPage: true,
+                                  autoPlay: true,
+                                  viewportFraction: 1,
+
+
+
                                 ),
-                                fit: BoxFit.cover,
-                                height: getProportionateScreenHeight(200),
+                                items :[
+                                  Stack(
+                                  alignment:Alignment.center,
+                                  children:[
+                                    Image(
+                                    image: NetworkImage(
+                                        'https://img.freepik.com/free-photo/diverse-hands-touching-white-paper_53876-98411.jpg?t=st=1649852964~exp=1649853564~hmac=bb082dc5ec8330732421c84e5dc2c7048874a02424686f62c3008f5e55eee81b&w=1380'
+                                    ),
+
+                                    fit: BoxFit.contain,
+                                    height: getProportionateScreenHeight(200),
+                                  ),
+                                    Center(
+                                      child: Text(
+                                        'Share your thoughts and advice ',
+
+                                      ),
+                                    ),
+                        ]
+                                ),
+                                  Image(
+                                    image: NetworkImage(
+                                        'https://img.freepik.com/free-photo/children-enjoying-ice-cream-summer-day_53876-146554.jpg?w=996&t=st=1653487810~exp=1653488410~hmac=9dde4506b4514dec35b81ca8c353bb8cd44ed17baea54cd61249f4ed1eb75891'
+                                    ),
+
+                                    fit: BoxFit.cover,
+                                    height: getProportionateScreenHeight(200),
+                                  ),
+                                  Image(
+                                    image: NetworkImage(
+                                        'https://img.freepik.com/free-photo/diverse-hands-united-business-teamwork-gesture_53876-129428.jpg?w=1060&t=st=1653487779~exp=1653488379~hmac=94e724adc08a9581195cb86bcc5d4ce4637a737869be4ac73eea3c2eaf75ceba'
+                                    ),
+
+                                    fit: BoxFit.cover,
+                                    height: getProportionateScreenHeight(200),
+                                  ),
+                                  Image(
+                                    image: NetworkImage(
+                                        'https://img.freepik.com/free-photo/little-kids-cheering-while-holding-white-board_53876-97648.jpg?t=st=1653489859~exp=1653490459~hmac=af0eeae2a3cb90d4926aad98069eb5b031cb6f06a4f7e9812f43edad666df280&w=1060'
+                                    ),
+
+                                    fit: BoxFit.cover,
+                                    height: getProportionateScreenHeight(200),
+                                  ),
+
+
+                                ]
                               ),
-                              Text(
-                                'Share your thoughts and advice ',
+                            ),
 
-                              )
-                            ],
-                          ),
+
+                          ],
                         ),
-
-
+                      ),
+                      SizedBox(
+                        height: getProportionateScreenHeight(15),
                       ),
 
                       Padding(
                         padding: const EdgeInsets.only(left: 10.0,right: 10),
                         child: Theme(
                           data: ThemeData(
+
                             inputDecorationTheme: InputDecorationTheme(
                               border: InputBorder.none,
 
                             ),
                           ),
                           child: Container(
+
                             width: getProportionateScreenWidth(500),
+                            height: getProportionateScreenHeight(60),
                             child: TextFormField(
                                 onTap: (){
                                   navigateTo(
@@ -116,16 +171,16 @@ class communityScreentest extends StatelessWidget {
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(
                                   borderSide: BorderSide(width: 2,color: Colors.grey.shade200),
-                                  borderRadius: BorderRadius.circular(10),
+                                  borderRadius: BorderRadius.circular(20),
                                 ),
                                 focusedBorder:  OutlineInputBorder(
                                   borderSide: BorderSide(width: 2,color: Colors.grey.shade200),
-                                  borderRadius: BorderRadius.circular(10),
+                                  borderRadius: BorderRadius.circular(20),
 
                                 ),
                                 enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(width: 2,color: Colors.grey.shade200),
-                                  borderRadius: BorderRadius.circular(10),
+                                  borderRadius: BorderRadius.circular(20),
 
                                 ),
                                 focusColor: kPrimaryColor,
@@ -142,6 +197,7 @@ class communityScreentest extends StatelessWidget {
                                 ),
 
                                 hintText: 'Any advice to share.. ?!',
+                                hintStyle: TextStyle(color: Colors.black87),
 
                               ),
 
