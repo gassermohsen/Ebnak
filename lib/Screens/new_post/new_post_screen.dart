@@ -20,6 +20,9 @@ class NewPostScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<EbnakCubit, EbnakStates>(
       listener: (context, state) {
+        if (state is EbnakCreatePostSuccessState){
+          Navigator.pop(context);
+        }
       },
       builder: (context, state) {
         var postImage=EbnakCubit.get(context).postImage;
@@ -65,7 +68,7 @@ class NewPostScreen extends StatelessWidget {
                       radius: 30.0,
                       backgroundImage:
                       NetworkImage(
-                          'https://img.freepik.com/free-photo/handsome-confident-smiling-man-with-hands-crossed-chest_176420-18743.jpg?t=st=1649854254~exp=1649854854~hmac=362731baa7ebc16247ded4c09be827bb5ce5f961e9942f08a2dbd16813195731&w=1060'),
+                          '${EbnakCubit.get(context).userModel?.image}'),
 
                     ),
                     SizedBox(
@@ -73,7 +76,7 @@ class NewPostScreen extends StatelessWidget {
                     ),
                     Expanded(
                       child: Text(
-                        'Gasser Mohsen',
+                        '${EbnakCubit.get(context).userModel?.name}',
                         style: TextStyle(
                             height: 1.35,
                             color: Colors.black87,

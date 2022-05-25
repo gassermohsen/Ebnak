@@ -4,6 +4,7 @@ import 'package:ebnak1/Size_config/size_config.dart';
 import 'package:ebnak1/constants/constants.dart';
 import 'package:ebnak1/layout/ebnak/cubit/ebnak_cubit.dart';
 import 'package:ebnak1/layout/ebnak/cubit/ebnak_states.dart';
+import 'package:ebnak1/models/comment_model.dart';
 import 'package:ebnak1/styles/icon_broken.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +27,7 @@ class communityScreentest extends StatelessWidget {
       listener: (context, state) {},
       builder: (context, state) {
         return Scaffold(
+          resizeToAvoidBottomInset: true,
           floatingActionButton: SizedBox(
             width: getProportionateScreenWidth(55),
             height: getProportionateScreenHeight(60),
@@ -89,6 +91,66 @@ class communityScreentest extends StatelessWidget {
 
 
                       ),
+
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10.0,right: 10),
+                        child: Theme(
+                          data: ThemeData(
+                            inputDecorationTheme: InputDecorationTheme(
+                              border: InputBorder.none,
+
+                            ),
+                          ),
+                          child: Container(
+                            width: getProportionateScreenWidth(500),
+                            child: TextFormField(
+                                onTap: (){
+                                  navigateTo(
+                                    context,
+                                    NewPostScreen(),
+                                  );
+                                },
+
+                              controller:commentController,
+
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderSide: BorderSide(width: 2,color: Colors.grey.shade200),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                focusedBorder:  OutlineInputBorder(
+                                  borderSide: BorderSide(width: 2,color: Colors.grey.shade200),
+                                  borderRadius: BorderRadius.circular(10),
+
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(width: 2,color: Colors.grey.shade200),
+                                  borderRadius: BorderRadius.circular(10),
+
+                                ),
+                                focusColor: kPrimaryColor,
+                                fillColor: Colors.white,
+                                filled: true,
+
+                                prefixIcon: Padding(
+                                  padding: const EdgeInsets.only(right: 15.0,left: 15),
+                                  child: CircleAvatar(
+
+                                    backgroundImage: NetworkImage('${EbnakCubit.get(context).userModel?.image}'),
+                                    radius: 20,
+                                  ),
+                                ),
+
+                                hintText: 'Any advice to share.. ?!',
+
+                              ),
+
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      SizedBox(height: getProportionateScreenHeight(20),),
                       StreamBuilder<QuerySnapshot>(
                           stream: EbnakCubit.get(context).trytogetPosts(),
                           builder: (context,
@@ -314,7 +376,7 @@ class communityScreentest extends StatelessWidget {
                         top: 15.0
                     ),
                     child: Container(
-                      height: getProportionateScreenHeight(140),
+                      height: getProportionateScreenHeight(250),
                       width: double.infinity,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(4),
@@ -395,19 +457,190 @@ class communityScreentest extends StatelessWidget {
                                 SizedBox(
                                   width: getProportionateScreenWidth(5),
                                 ),
-                                Text(
-                                  '0 Comments',
-                                  style: Theme
-                                      .of(context)
-                                      .textTheme
-                                      .caption,
-                                ),
+                                StreamBuilder<QuerySnapshot>(
+                                    stream: FirebaseFirestore.instance
+                                        .collection('posts')
+                                        .doc(EbnakCubit
+                                        .get(context)
+                                        .PostsIds[index])
+                                        .collection('comments')
+                                        .snapshots(),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.connectionState ==
+                                          ConnectionState.waiting) {
+                                        return Text('0');
+                                      }
+                                      return Text(
+                                          ('${snapshot.data!.docs.length.toString()} Comments'),
+                                        style: Theme
+                                            .of(context)
+                                            .textTheme
+                                            .caption,
+                                      );
+                                    }
+                                )
 
 
                               ],
                             ),
                           ),
-                          onTap: () {},
+                          onTap: () {
+                            commentController.clear();
+
+                            showModalBottomSheet(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
+                                ),
+                                backgroundColor: Colors.white,
+                                isScrollControlled: true,
+                                context: context,
+                                builder: (context){
+                                  return Container(
+                                    height: MediaQuery.of(context).size.height * 0.75,
+                                    child: Stack(
+                                      children: [
+                                        SingleChildScrollView(
+                                          child:
+                                          Column(
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.symmetric(horizontal: 80),
+                                                child: Divider(
+                                                  thickness: 3,
+                                                  color: kPrimaryColor,
+                                                ),
+                                              ),
+                                              Text('Comments',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.grey[500],fontStyle: FontStyle.italic),),
+                                              SizedBox(
+                                                height: getProportionateScreenHeight(30),
+                                              ),
+                                              StreamBuilder<QuerySnapshot>(
+                                                  stream: FirebaseFirestore.instance
+                                                      .collection('posts')
+                                                      .doc(EbnakCubit
+                                                      .get(context)
+                                                      .PostsIds[index])
+                                                      .collection('comments')
+                                                      .orderBy('time')
+                                                      .snapshots(),
+                                                  builder: (context, snapshot) {
+                                                    if(snapshot.hasData){
+                                                      EbnakCubit
+                                                          .get(context)
+                                                          .commentmodel = [];
+                                                      for (int i = 0; i <
+                                                          snapshot.data!.docs.length; i++) {
+                                                        EbnakCubit
+                                                            .get(context)
+                                                            .commentmodel
+                                                            .add(commentModel.fromSnapShot(
+                                                            snapshot.data!.docs![i]));
+                                                      }
+                                                      print(EbnakCubit.get(context).commentmodel.length);
+                                                    }
+
+                                                    return ListView.separated(
+                                                      itemBuilder: (context, index) =>
+                                                          buildCommentColumn(EbnakCubit
+                                                              .get(context)
+                                                              .commentmodel[index], EbnakCubit
+                                                              .get(context)
+                                                              .PostsIds[index], context, index),
+                                                      itemCount: EbnakCubit
+                                                          .get(context)
+                                                          .commentmodel
+                                                          .length,
+                                                      physics: NeverScrollableScrollPhysics(),
+                                                      shrinkWrap: true,
+                                                      separatorBuilder: (context, index) =>
+                                                          SizedBox(
+                                                            height: getProportionateScreenHeight(8),
+                                                          ),
+
+                                                    );
+                                                  }
+                                              ),
+                                              SizedBox(height: getProportionateScreenHeight(80),),
+
+                                            ],
+
+                                          ),
+                                        ),
+
+                                        Padding(
+                                          padding: const EdgeInsets.only(top: 20),
+                                          child: Container(
+
+                                            alignment: Alignment.bottomCenter,
+                                            child: Padding(
+                                              padding:  EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+
+                                              child: Theme(
+                                                data: ThemeData(
+                                                  inputDecorationTheme: InputDecorationTheme(
+                                                    border: InputBorder.none,
+
+                                                  ),
+                                                ),
+                                                child: TextFormField(
+                                                  controller:commentController,
+
+                                                  decoration: InputDecoration(
+                                                    border: OutlineInputBorder(
+                                                      borderSide: BorderSide(width: 1,color: Colors.grey.shade200),
+                                                    ),
+                                                    focusedBorder:  OutlineInputBorder(
+                                                      borderSide: BorderSide(width: 1,color: Colors.grey.shade200),
+                                                    ),
+                                                    enabledBorder: OutlineInputBorder(
+                                                      borderSide: BorderSide(width: 1,color: Colors.grey.shade200),
+                                                    ),
+                                                    focusColor: kPrimaryColor,
+                                                    fillColor: Colors.white,
+                                                    filled: true,
+                                                    prefixIcon: Padding(
+                                                      padding: const EdgeInsets.only(right: 8.0),
+                                                      child: CircleAvatar(
+
+                                                        backgroundImage: NetworkImage('${EbnakCubit.get(context).userModel?.image}'),
+                                                        radius: 5,
+                                                      ),
+                                                    ),
+                                                    suffixIcon: IconButton(
+
+                                                      icon:Icon(IconBroken.Send,color:kPrimaryColor,),
+                                                      onPressed: () {
+                                                        var nowTime= DateTime.now();
+                                                        EbnakCubit.get(context).CommentPost(postId:EbnakCubit.get(context).PostsIds[index],comment: commentController.text,time:nowTime.toString(),      );
+                                                        commentController.clear();
+                                                      },
+                                                      color: kPrimaryColor,
+
+
+                                                    ),
+                                                    hintText: 'Write a comment...',
+
+                                                  ),
+
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+
+                                      ],
+                                    ),
+                                  );
+
+
+
+
+
+
+
+
+                                });
+                          },
                         ),
                       ),
 
@@ -454,10 +687,165 @@ class communityScreentest extends StatelessWidget {
                           ],
                         ),
                         onTap: () {
-                          ShowCommentSheet(
-                              context,
-                              index
-                          );
+                          commentController.clear();
+
+                          showModalBottomSheet(
+                             shape: RoundedRectangleBorder(
+                               borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
+                             ),
+                               backgroundColor: Colors.white,
+                               isScrollControlled: true,
+                               context: context,
+                               builder: (context){
+                                 return Container(
+                                   height: MediaQuery.of(context).size.height * 0.75,
+                                   child: Stack(
+                                             children: [
+                                               SingleChildScrollView(
+                                                 child:
+                                                     Column(
+                                                       children: [
+                                                       Padding(
+                                                         padding: const EdgeInsets.symmetric(horizontal: 80),
+                                                         child: Divider(
+                                                           thickness: 3,
+                                                           color: kPrimaryColor,
+                                                         ),
+                                                       ),
+                                                       Text('Comments',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.grey[500],fontStyle: FontStyle.italic),),
+                                                        SizedBox(
+                                                          height: getProportionateScreenHeight(30),
+                                                        ),
+                                                       StreamBuilder<QuerySnapshot>(
+                                                         stream: FirebaseFirestore.instance
+                                                             .collection('posts')
+                                                             .doc(EbnakCubit
+                                                             .get(context)
+                                                             .PostsIds[index])
+                                                             .collection('comments')
+                                                              .orderBy('time')
+                                                             .snapshots(),
+                                                         builder: (context, snapshot) {
+                                                           EbnakCubit
+                                                               .get(context)
+                                                               .commentmodel = [];
+                                                           if(snapshot.connectionState==ConnectionState.waiting){
+                                                             return Center(child: Text('Loading'));
+                                                           }
+                                                           if(snapshot.hasData){
+
+                                                          for (int i = 0; i <
+                                                          snapshot.data!.docs.length; i++) {
+                                                            EbnakCubit
+                                                                .get(context)
+                                                                .commentmodel
+                                                                .add(commentModel.fromSnapShot(
+                                                                snapshot.data!.docs![i]));
+                                                          }
+                                                          print(EbnakCubit.get(context).commentmodel.length);
+                                                           }
+
+                                                           return ListView.separated(
+                                                             itemBuilder: (context, index) =>
+                                                                 buildCommentColumn(EbnakCubit
+                                                                     .get(context)
+                                                                     .commentmodel[index], EbnakCubit
+                                                                     .get(context)
+                                                                     .PostsIds[index], context, index),
+                                                             itemCount: EbnakCubit
+                                                                 .get(context)
+                                                                 .commentmodel
+                                                                 .length,
+                                                             physics: NeverScrollableScrollPhysics(),
+                                                             shrinkWrap: true,
+                                                             separatorBuilder: (context, index) =>
+                                                                 SizedBox(
+                                                                   height: getProportionateScreenHeight(8),
+                                                                 ),
+
+                                                           );
+                                                         }
+                                                       ),
+                                                        SizedBox(height: getProportionateScreenHeight(80),),
+
+                                                     ],
+
+                                                     ),
+                                               ),
+
+                                               Padding(
+                                                 padding: const EdgeInsets.only(top: 20),
+                                                 child: Container(
+
+                                                   alignment: Alignment.bottomCenter,
+                                                   child: Padding(
+                                                     padding:  EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+
+                                                     child: Theme(
+                                                       data: ThemeData(
+                                                         inputDecorationTheme: InputDecorationTheme(
+                                                           border: InputBorder.none,
+
+                                                         ),
+                                                       ),
+                                                       child: TextFormField(
+                                                         controller:commentController,
+
+                                                         decoration: InputDecoration(
+                                                           border: OutlineInputBorder(
+                                                             borderSide: BorderSide(width: 1,color: Colors.grey.shade200),
+                                                           ),
+                                                           focusedBorder:  OutlineInputBorder(
+                                                               borderSide: BorderSide(width: 1,color: Colors.grey.shade200),
+                                                               ),
+                                                           enabledBorder: OutlineInputBorder(
+                                                               borderSide: BorderSide(width: 1,color: Colors.grey.shade200),
+                                                           ),
+                                                           focusColor: kPrimaryColor,
+                                                           fillColor: Colors.white,
+                                                           filled: true,
+                                                           prefixIcon: Padding(
+                                                             padding: const EdgeInsets.only(right: 8.0),
+                                                             child: CircleAvatar(
+
+                                                               backgroundImage: NetworkImage('${EbnakCubit.get(context).userModel?.image}'),
+                                                               radius: 5,
+                                                             ),
+                                                           ),
+                                                           suffixIcon: IconButton(
+
+                                                             icon:Icon(IconBroken.Send,color:kPrimaryColor,),
+                                                             onPressed: () {
+                                                               var nowTime= DateTime.now();
+                                                               EbnakCubit.get(context).CommentPost(postId:EbnakCubit.get(context).PostsIds[index],comment: commentController.text,time:nowTime.toString(),      );
+                                                                commentController.clear();
+                                                             },
+                                                             color: kPrimaryColor,
+
+
+                                                           ),
+                                                           hintText: 'Write a comment...',
+
+                                                         ),
+
+                                                       ),
+                                                     ),
+                                                   ),
+                                                 ),
+                                               ),
+
+                                             ],
+                                           ),
+                                 );
+
+
+
+
+
+
+
+
+                               });
                         },
                       ),
                     ),
@@ -503,195 +891,62 @@ class communityScreentest extends StatelessWidget {
           )
       );
 
+  Column buildCommentColumn(commentModel model, String postId, context, index) {
+                                      return Column(
+                                         crossAxisAlignment: CrossAxisAlignment.end,
+                                         children: [
+                                           Row(
+                                             children: [
+                                               Padding(
+                                                 padding: const EdgeInsets.only(left: 10.0),
+                                                 child: CircleAvatar(
+                                                   backgroundImage: NetworkImage('${model.userImage}'),
+                                                   radius: 25,
+                                                 ),
+                                               ),
+                                               SizedBox(width: getProportionateScreenWidth(10),),
+                                               Flexible(
+                                                 child: Padding(
+                                                   padding: const EdgeInsets.only(right: 20),
+                                                   child: Container(
 
-  ShowCommentSheet(context, index) {
-    return showModalBottomSheet(context: context,
-        isScrollControlled: true,
-        builder: (context) {
-          return Container(
-            height: MediaQuery
-                .of(context)
-                .size
-                .height * 0.75,
-            width: MediaQuery
-                .of(context)
-                .size
-                .width,
+                                                     child: Padding(
+                                                       padding: const EdgeInsets.all(15.0),
+                                                       child: Column(
 
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(12), topRight: Radius.circular(12)),
-            ),
-            child: Column(
+                                                         children: [
+                                                           Text('${model.name}',style: TextStyle(
+                                                             fontStyle: FontStyle.normal,
+                                                             fontWeight: FontWeight.bold,
+                                                             fontSize: 14,
+                                                             color: Colors.black
+                                                           ),),
+                                                           Text('${model.comment}',style: TextStyle(fontStyle: FontStyle.italic,fontWeight: FontWeight.w300,color: Colors.black),),
 
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 100),
-                  child: Divider(
-                    thickness: 4.0,
-                    color: kPrimaryColor,
-                  ),
-                ),
-                SizedBox(
-                  height: getProportionateScreenHeight(5),
-                ),
-                Center(child: Text('Comments', style: TextStyle(
-                  fontSize: 25, fontWeight: FontWeight.bold,),)),
-                Container(
-                  child: StreamBuilder<QuerySnapshot>(
-                    stream: FirebaseFirestore.instance.collection('posts')
-                        .doc(EbnakCubit
-                        .get(context)
-                        .PostsIds[index])
-                        .collection('comments')
-                        .orderBy('dateTime')
-                        .snapshots(),
-                    builder: (BuildContext context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(
-                          child: CircularProgressIndicator(
-                            color: kPrimaryColor,
-                          ),
-                        );
-                      }
-                      else {
-                        return ListView(
-                          children: snapshot.data!.docs.map((
-                              DocumentSnapshot documentsnapshot) {
-                            return Container(
-                              height: getProportionateScreenHeight(80),
-                              width: getProportionateScreenWidth(80),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      GestureDetector(
-                                        child: CircleAvatar(
-                                          backgroundColor: kPrimaryColor,
-                                          radius: 15,
-                                          backgroundImage: NetworkImage(
-                                            documentsnapshot['userImage'],
-                                          ),
-                                        ),
+                                                         ],
+                                                         mainAxisAlignment: MainAxisAlignment.start,
+                                                         crossAxisAlignment: CrossAxisAlignment.start,
+                                                       ),
+                                                     ),
+                                                     decoration: BoxDecoration(
+                                                       color: Colors.grey[100],
 
-                                      ),
-                                      Column(
-                                        children: [
-                                          Container(
-                                            child: Row(
-                                                children: [
-                                                  Text(documentsnapshot['name'],
-                                                    style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontWeight: FontWeight
-                                                          .bold, fontSize: 12,
-                                                    ),),
+                                                       borderRadius: BorderRadius.circular(20),
+                                                     ),
+                                                   ),
+                                                 ),
+                                               ),
 
-                                                ]
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                      Container(
-                                        child: Row(
-                                          children: [
-                                            IconButton(onPressed: () {},
-                                                icon: Icon(Icons.arrow_upward,
-                                                  color: kPrimaryColor,)),
-                                            Text('0', style: TextStyle(
-                                                fontSize: 12,
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.bold)),
-                                            IconButton(onPressed: () {},
-                                                icon: Icon(Icons.reply,
-                                                  color: Colors.amberAccent,)),
-                                            IconButton(onPressed: () {},
-                                                icon: Icon(Icons.delete_forever,
-                                                  color: Colors.black,)),
+                                             ],
+                                           ),
 
-                                          ],
-                                        ),
-                                      )
-                                    ],
-
-                                  ),
-                                  Container(
-                                    child: Row(
-                                      children: [
-                                        IconButton(onPressed: () {},
-                                            icon: Icon(
-                                              Icons.arrow_forward_ios_outlined,
-                                              color: Colors.blueAccent,)),
-                                        Container(
-                                          width: MediaQuery
-                                              .of(context)
-                                              .size
-                                              .width,
-                                          child: Text(
-                                            documentsnapshot['comment'],
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 16,
-                                            ),),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                  Divider(
-                                    color: kPrimaryColor.withOpacity(0.2),
-                                  )
-                                ],
-                              ),
-                            );
-                          }).toList(),
-                        );
-                      }
-                    },
-                  ),
-                ),
-                Container(
-                  width: MediaQuery
-                      .of(context)
-                      .size
-                      .width,
-                  child: Row(
-                    children: [
-                      Container(
-                        width: getProportionateScreenWidth(300),
-                        height: getProportionateScreenHeight(20),
-                        child: TextField(
-                          textCapitalization: TextCapitalization.sentences,
-                          decoration: InputDecoration(
-                            hintText: 'Add Comment',
-                            hintStyle: TextStyle(
-                              color: Colors.black,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          controller: commentController,
-                        ),
-                      ),
-                      FloatingActionButton(onPressed:(){
-                        print('Posting comment');
-                        EbnakCubit.get(context).CommentPost(EbnakCubit.get(context).PostsIds[index], commentController.text);
-                      },
-                        backgroundColor: kPrimaryColor,
-                      child: Icon(Icons.comment,color: Colors.white,),
-                      )
-                    ],
-                  ),
-
-                ),
-              ],
-            ),
-
-          );
-        });
+                                         ],
+                                       );
   }
 
 
+
+
+
 }
+

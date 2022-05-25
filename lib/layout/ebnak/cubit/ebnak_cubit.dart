@@ -22,6 +22,8 @@ import '../../../Screens/adopt/repository/adoption_repository.dart';
 import '../../../Screens/community/community_Screen_test.dart';
 import '../../../Screens/community/community_screen_test2.dart';
 import '../../../models/addFace_model.dart';
+import '../../../models/comment_model.dart';
+import '../../../models/comment_model.dart';
 import '../../../models/detectFace_model.dart';
 import '../../../models/reportMissing_model.dart';
 import '../../../models/user_model.dart';
@@ -355,19 +357,22 @@ EbnakUserModel? userModel;
     });
   }
 
-  void CommentPost(String postId,String comment){
+
+  List<commentModel> commentmodel=[];
+
+  void CommentPost({required String postId,required String comment, required String? time}){
+
     FirebaseFirestore.instance
         .collection('posts')
         .doc(postId)
         .collection('comments')
-        .doc(userModel?.uID)
-        .set({
+        .add({
       'comment':comment,
       'name':userModel?.name,
       'userID':userModel?.uID,
       'userImage':userModel?.image,
       'userEmail':userModel?.email,
-      'time':Timestamp.now().toString(),
+      'time':time,
     })
         .then((value) {
       emit(EbnakLikePostSuccessState());
@@ -410,7 +415,7 @@ EbnakUserModel? userModel;
   Stream<QuerySnapshot<Map<String, dynamic>>> trytogetPosts() {
     return FirebaseFirestore.instance
         .collection('posts')
-        .orderBy('dateTime')
+        .orderBy('dateTime',descending: true)
         .snapshots();
   }
 
