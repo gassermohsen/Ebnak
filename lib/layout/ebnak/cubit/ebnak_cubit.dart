@@ -273,6 +273,7 @@ EbnakUserModel? userModel;
         .add(
         model.toMap())
         .then((value) {
+          FirebaseFirestore.instance.collection('users').doc(uId).collection('userposts').add(model.toMap());
           emit(EbnakCreatePostSuccessState());
     })
         .catchError((onError){
@@ -542,6 +543,15 @@ EbnakUserModel? userModel;
             'reportID': value.id,
            'persistedFaceId':faceModel?.persistedFaceId
           });
+
+      FirebaseFirestore.instance.collection('users').doc(uId).collection('userreports').add(reportModel.toMap()).then((value2){
+        FirebaseFirestore.instance.collection('users').doc(uId).collection('userreports').doc(value2.id).update({
+          'reportID': value.id,
+          'persistedFaceId':faceModel?.persistedFaceId
+        });
+      });
+
+
       emit(EbnakCreateReportSuccessState());
     })
         .catchError((onError){
@@ -866,8 +876,18 @@ emit(EbnakFindSimilarLoadingState());
     }
 
 
+    List<AdoptModel> childDetails=[];
+  
+  void getChildDeatils(){
+    FirebaseFirestore.instance.collection('adoption')
+        .get()
+        .then((value) {
+          value.docs.forEach((element) {
+            childDetails.add(AdoptModel.FromJson(element.data()));
+          });
 
-
+    });
+  }
 
 
 

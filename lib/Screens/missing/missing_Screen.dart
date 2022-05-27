@@ -7,6 +7,8 @@ import 'package:ebnak1/styles/icon_broken.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'allreportsOnMaps_Screen.dart';
+
 class missingScreen extends StatelessWidget {
   const missingScreen({Key? key}) : super(key: key);
 
@@ -122,7 +124,10 @@ class missingScreen extends StatelessWidget {
             Row(
               children: [
                 InkWell(
-                  onTap: (){},
+                  onTap: (){
+                    navigateTo(context, AllReportsOnMapsScreen());
+
+                  },
                   child: Padding(
                     padding: const EdgeInsets.only(left: 12.0),
                     child: Material(
@@ -165,7 +170,9 @@ class missingScreen extends StatelessWidget {
                   ),
                 ),
                 InkWell(
-                  onTap: (){},
+                  onTap: (){
+
+                  },
                   child: Padding(
                     padding: const EdgeInsets.only(left: 20.0,right: 12),
                     child: Material(

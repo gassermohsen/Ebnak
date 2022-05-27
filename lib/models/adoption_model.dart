@@ -35,7 +35,7 @@ class AdoptModel{
   });
   AdoptModel.FromJson(Map<String,dynamic>json){
     name=json['name'];
-    dateOfBirth=json['datofbirth'];
+    dateOfBirth=json['dateofbirth'];
     childID=json['childID'];
     hobbies=json['Hobbies'];
     likes=json['Likes'];
