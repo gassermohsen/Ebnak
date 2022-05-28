@@ -497,7 +497,7 @@ EbnakUserModel? userModel;
     required String? MissingAddress,
     required String? reportID,
     required String? persistedFaceId,
-
+    required GeoPoint? currentLocation,
 
 
 
@@ -523,7 +523,8 @@ EbnakUserModel? userModel;
       uID: userModel?.uID,
       phoneNumber: userModel?.phone,
       reportID: reportID,
-      persistedFaceId: persistedFaceId
+      persistedFaceId: persistedFaceId,
+      location: currentLocation,
 
 
     );
@@ -568,6 +569,7 @@ EbnakUserModel? userModel;
     required String? Age,
     required String? Info,
     required String? MissingAddress,
+    required GeoPoint? currentLocation,
   }){
     emit(EbnakCreateReportLoadingState());
     firebase_storage.FirebaseStorage.instance
@@ -588,6 +590,7 @@ EbnakUserModel? userModel;
             Age: Age,
           reportID: '',
           persistedFaceId:'',
+          currentLocation: currentLocation,
         );
 
 
@@ -886,6 +889,19 @@ emit(EbnakFindSimilarLoadingState());
             childDetails.add(AdoptModel.FromJson(element.data()));
           });
 
+    });
+  }
+
+List<reportMissingModel>Reports=[];
+  void getReportDeatils(){
+    FirebaseFirestore.instance.collection('Reports')
+        .snapshots()
+        .listen((value) {
+          Reports=[];
+      value.docs.forEach((element) {
+        Reports.add(reportMissingModel.FromJson(element.data()));
+      });
+      print(Reports.length);
     });
   }
 

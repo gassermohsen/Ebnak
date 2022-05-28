@@ -1,8 +1,12 @@
 import 'dart:collection';
 import 'dart:convert';
 import 'dart:typed_data';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ebnak1/constants/constants.dart';
 import 'package:ebnak1/layout/ebnak/cubit/ebnak_cubit.dart';
 import 'package:ebnak1/layout/ebnak/cubit/ebnak_states.dart';
+import 'package:ebnak1/shared/re_useable_components.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
@@ -13,6 +17,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+import '../../models/reportMissing_model.dart';
+import 'markerReportDetails_Screen.dart';
+
 class AllReportsOnMapsScreen extends StatefulWidget {
   const AllReportsOnMapsScreen({Key? key}) : super(key: key);
 
@@ -22,11 +29,18 @@ class AllReportsOnMapsScreen extends StatefulWidget {
 }
 
 class _AllReportsOnMapsScreenState extends State<AllReportsOnMapsScreen> {
-  var myMarkers = HashSet<Marker>();
+  Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
   late BitmapDescriptor mapMarker;
   var currentPos;
   var currentLat = 0.0;
   var currentLong = 0.0;
+
+ late  GoogleMapController mapController;
+
+  onMapCreated(GoogleMapController controller) {
+    mapController = controller;
+    mapController.moveCamera(CameraUpdate.newLatLng(LatLng(currentPos.latitude, currentPos.longitude))) ;
+  }
 
 
   @override
@@ -34,13 +48,56 @@ class _AllReportsOnMapsScreenState extends State<AllReportsOnMapsScreen> {
     super.initState();
     setMarkerIcon();
     _determinePosition();
-    getCurrentLocation();
+    getMarkerData();
+    Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
+        .then((currloc) {
+      setState(() {
+        currentPos = currloc;
+      });
+      mapController.moveCamera(CameraUpdate.newLatLng(LatLng(currentPos.latitude, currentPos.longitude))) ;
+    });
   }
 
   void setMarkerIcon() async {
     mapMarker = await BitmapDescriptor.fromAssetImage(
         ImageConfiguration(), 'assets/images/warning.png');
   }
+
+  getMarkerData() {
+    int index=0;
+    FirebaseFirestore.instance.collection('Reports')
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs.forEach((doc) {
+        initMarker(doc.data(), doc.id,index);
+        index++;
+      });
+    });
+  }
+
+  void initMarker(specify, specifyId, index) async {
+    var markerIdVal = specifyId;
+    final MarkerId markerId = MarkerId(markerIdVal);
+    final Marker marker = Marker(
+      markerId: markerId,
+
+      position:
+      LatLng(specify['location'].latitude, specify['location'].longitude),
+      infoWindow: InfoWindow(title: "Warning ! ",
+        snippet:"${specify['fullName']} is Missing / Tap for more info  ",
+        onTap: (){
+        navigateTo(context, MarkerDetailsScreen(EbnakCubit.get(context).Reports[index]));
+      },),
+      icon:mapMarker,
+    );
+    setState(() {
+      markers[markerId] = marker;
+      print(markers.length);
+      //print(markerId);
+    });
+  }
+
+
 
   void getCurrentLocation() async {
     await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
@@ -50,6 +107,8 @@ class _AllReportsOnMapsScreenState extends State<AllReportsOnMapsScreen> {
         currentLat = pos.latitude;
         currentLat = pos.longitude;
       });
+      mapController.moveCamera(CameraUpdate.newLatLng(LatLng(pos.latitude, pos.longitude))) ;
+
     });
   }
 
@@ -102,28 +161,22 @@ class _AllReportsOnMapsScreenState extends State<AllReportsOnMapsScreen> {
       },
       builder: (context, state) {
         return Scaffold(
-          appBar: AppBar(),
+          appBar: AppBar(
+            title: Text('Nearby Reports'),
+            backgroundColor: Colors.white,
+            foregroundColor: Colors.black,
+            elevation: 10,
+            toolbarHeight: 50,
+          ),
           body: GoogleMap(
             myLocationButtonEnabled: true,
             myLocationEnabled: true,
             initialCameraPosition: CameraPosition(
                 target: LatLng(currentLat, currentLong),
-                zoom: 19
+                zoom: 17
             ),
-            onMapCreated: (GoogleMapController googleMapController) async {
-              googleMapController.animateCamera(CameraUpdate.newCameraPosition(
-                  CameraPosition(target: LatLng(currentLat, currentLong,))));
-              setState(() {
-                myMarkers.add(
-                    Marker(
-                      markerId: MarkerId('1'),
-                      position: LatLng(30.0367030, 30.9730550),
-                      icon: mapMarker,
-
-                    ));
-              });
-            },
-            markers: myMarkers,
+            onMapCreated: onMapCreated,
+            markers: Set<Marker>.of(markers.values),
           ),
 
 
@@ -132,3 +185,5 @@ class _AllReportsOnMapsScreenState extends State<AllReportsOnMapsScreen> {
     );
   }
 }
+
+

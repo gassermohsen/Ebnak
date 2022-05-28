@@ -89,6 +89,7 @@ PreferredSizeWidget defaultAppBar({
 Widget defaultTextButton({
   void Function()? function,
   required String text,
+  Color? color,
 }) =>
     TextButton(
       onPressed: function,
@@ -96,7 +97,7 @@ Widget defaultTextButton({
         text.toUpperCase(),
         style: TextStyle(
           fontWeight: FontWeight.bold,
-          color: kPrimaryColor,
+          color:  color?? kPrimaryColor,
         ),
       ),
     );

@@ -1,10 +1,12 @@
 
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ebnak1/Size_config/size_config.dart';
 import 'package:ebnak1/layout/ebnak/cubit/ebnak_states.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geolocator/geolocator.dart';
 
 import '../../constants/constants.dart';
 import '../../layout/ebnak/cubit/ebnak_cubit.dart';
@@ -12,17 +14,48 @@ import '../../shared/re_useable_components.dart';
 import '../../styles/icon_broken.dart';
 import 'missing_Screen.dart';
 
-class ReportMissingScreen extends StatelessWidget {
+class ReportMissingScreen extends StatefulWidget {
 
+  @override
+  State<ReportMissingScreen> createState() => _ReportMissingScreenState();
+}
+
+class _ReportMissingScreenState extends State<ReportMissingScreen> {
   var nameController = TextEditingController();
+
   var ageController = TextEditingController();
+
   var addressController = TextEditingController();
+
   var infoController = TextEditingController();
 
+  var  currentPos;
+  var currentLat;
+  var currentLong;
+
+
+  @override
+  void initState() {
+    super.initState();
+    getCurrentLocation();
+  }
+
+
+  void getCurrentLocation() async {
+    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
+        .then((Position pos) async {
+      setState(() {
+        currentPos = pos;
+        currentLat = pos.latitude;
+        currentLong = pos.longitude;
+      });
+
+    });
+  }
 
   late String fullName;
-  String Unkown = "unKnown";
 
+  String Unkown = "unKnown";
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +78,7 @@ class ReportMissingScreen extends StatelessWidget {
             title: 'Missing',
             actions: [
               defaultTextButton(
+                color: Colors.red,
                   text: 'Report',
                   function: (){
                     var nowTime= DateTime.now();
@@ -62,7 +96,8 @@ class ReportMissingScreen extends StatelessWidget {
                           fullName: nameController.text,
                           Info: infoController.text,
                           MissingAddress: addressController.text,
-                          Age: ageController.text);
+                          Age: ageController.text,
+                          currentLocation: GeoPoint(currentLat, currentLong));
 
 
                     }
@@ -195,7 +230,6 @@ class ReportMissingScreen extends StatelessWidget {
     );
   }
 
-
   TextFormField buildNameFormField() {
     return TextFormField(
         controller: nameController,
@@ -311,6 +345,4 @@ class ReportMissingScreen extends StatelessWidget {
         )
     );
   }
-
-
 }

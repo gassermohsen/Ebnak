@@ -16,6 +16,7 @@ class reportMissingModel{
   String? Information;
   String? phoneNumber;
   String? persistedFaceId;
+  GeoPoint? location;
 
 
  late String reportMissingImage;
@@ -35,6 +36,7 @@ class reportMissingModel{
     this.reportID,
     this.phoneNumber,
     this.persistedFaceId,
+    this.location
   });
   reportMissingModel.FromJson(Map<String,dynamic>?json){
     name=json?['name'];
@@ -49,6 +51,7 @@ class reportMissingModel{
     uID=json?['uID'];
     dateTime=json?['dateTime'];
     persistedFaceId=json?['persistedFaceId'];
+    location=json?['location'];
 
 
 
@@ -68,6 +71,8 @@ class reportMissingModel{
       'dateTime':dateTime,
       'image':image,
       'persistedFaceId':persistedFaceId,
+      'location':location,
+
 
 
 
@@ -89,6 +94,7 @@ class reportMissingModel{
     phoneNumber:snap['phoneNumber'],
     Information:snap['Information'],
       persistedFaceId:snap['persistedFaceId'],
+      location: snap['location'],
 
 
     );
