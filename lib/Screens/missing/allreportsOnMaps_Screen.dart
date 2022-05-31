@@ -6,6 +6,7 @@ import 'package:ebnak1/constants/constants.dart';
 import 'package:ebnak1/layout/ebnak/cubit/ebnak_cubit.dart';
 import 'package:ebnak1/layout/ebnak/cubit/ebnak_states.dart';
 import 'package:ebnak1/shared/re_useable_components.dart';
+import 'package:ebnak1/styles/icon_broken.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
@@ -18,6 +19,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../../models/reportMissing_model.dart';
+import 'ViewAllReports.dart';
 import 'markerReportDetails_Screen.dart';
 
 class AllReportsOnMapsScreen extends StatefulWidget {
@@ -178,6 +180,19 @@ class _AllReportsOnMapsScreenState extends State<AllReportsOnMapsScreen> {
             onMapCreated: onMapCreated,
             markers: Set<Marker>.of(markers.values),
           ),
+          floatingActionButton: Padding(
+            padding: const EdgeInsets.only(bottom: 30),
+            child: FloatingActionButton.extended(
+              onPressed: () {
+                navigateTo(context, ViewAllReports());
+              },
+              backgroundColor: Colors.teal.shade100,
+              label:Text('Show All ',style: TextStyle(color: Colors.white),),
+              icon:  Icon(IconBroken.Document,color: Colors.white,),
+
+            ),
+          ),
+          floatingActionButtonLocation: FloatingActionButtonLocation.startDocked,
 
 
         );

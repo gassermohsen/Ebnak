@@ -22,6 +22,7 @@ class NewPostScreen extends StatelessWidget {
       listener: (context, state) {
         if (state is EbnakCreatePostSuccessState){
           Navigator.pop(context);
+          EbnakCubit.get(context).removePostImage();
         }
       },
       builder: (context, state) {
@@ -118,13 +119,13 @@ class NewPostScreen extends StatelessWidget {
                   alignment: AlignmentDirectional.topEnd,
                   children: [
                     Container(
-                      height: 140.0,
+                      height: getProportionateScreenHeight(250),
                       width: double.infinity,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(4),
                         image: DecorationImage(
                           image:  FileImage(postImage!) ,
-                          fit: BoxFit.cover,
+                          fit: BoxFit.contain,
                         ),
                       ),
                     ),

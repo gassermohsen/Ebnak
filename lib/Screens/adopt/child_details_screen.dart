@@ -100,7 +100,7 @@ class ChildDetailsScreen extends StatelessWidget {
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.only(
-                                          left: 190, top: 18),
+                                          left: 10, top: 18),
                                       child: Icon(
                                         Icons.female,
                                         color: Colors.grey[500],

@@ -159,7 +159,7 @@ class _ReportMissingScreenState extends State<ReportMissingScreen> {
                       alignment: AlignmentDirectional.topEnd,
                       children: [
                         Container(
-                          height: 140.0,
+                          height: 300.0,
                           width: double.infinity,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(4),

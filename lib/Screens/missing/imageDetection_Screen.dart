@@ -63,17 +63,17 @@ class ImageDetectionScreen extends StatelessWidget {
                                   children: [
                                     Center(
                                       child: LinearProgressIndicator(
-                                        color:kPrimaryColor,
+                                        color:Colors.teal.shade100,
                                         backgroundColor: Colors.transparent,
                                       ),
 
                                     ),
                                     if(state is EbnakDetectionLoadingState)
-                                      Text('Scanning Image...',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.black54),),
+                                      Text('Scanning Image...',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.teal.shade100),),
                                     if(state is EbnakFaceDetectLoadingState)
-                                      Text('Detecting Face...',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.black54),),
+                                      Text('Detecting Face...',style: TextStyle(fontWeight: FontWeight.bold,color:Colors.teal.shade100),),
                                     if(state is EbnakFindSimilarLoadingState)
-                                      Text('Finding Similar...',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.black54),),
+                                      Text('Finding Similar...',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.teal.shade100),),
                                   ],
                                 ),
 
