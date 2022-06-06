@@ -76,7 +76,7 @@ class Ebnak extends StatelessWidget {
           create: (BuildContext context) => AppCubit()
 
             ),
-        BlocProvider(create: (context)=>EbnakCubit()..getUserData()..trytogetPosts()..getLikes()..getChildDeatils()..getReportDeatils()),
+        BlocProvider(create: (context)=>EbnakCubit()..getUserData()..trytogetPosts()..getLikes()..getChildDeatils()..getReportDeatils()..trytogetUserPosts()),
 
       ],
       child: BlocConsumer<AppCubit,AppStates>(

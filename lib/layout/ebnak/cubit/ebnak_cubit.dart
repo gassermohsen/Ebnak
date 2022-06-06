@@ -7,7 +7,6 @@ import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ebnak1/Screens/Home/home_Screen.dart';
 import 'package:ebnak1/Screens/adopt/adoption_Screen.dart';
-import 'package:ebnak1/Screens/community/community_Screen.dart';
 import 'package:ebnak1/Screens/missing/missing_Screen.dart';
 import 'package:ebnak1/Screens/profile/profile_screen.dart';
 import 'package:ebnak1/constants/constants.dart';
@@ -18,11 +17,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
-import '../../../Screens/adopt/repository/adoption_repository.dart';
 import '../../../Screens/community/community_Screen_test.dart';
-import '../../../Screens/community/community_screen_test2.dart';
 import '../../../models/addFace_model.dart';
-import '../../../models/comment_model.dart';
 import '../../../models/comment_model.dart';
 import '../../../models/detectFace_model.dart';
 import '../../../models/reportMissing_model.dart';
@@ -287,6 +283,8 @@ EbnakUserModel? userModel;
   List<String>PostsIds=[];
   List<int>Likes=[];
 
+
+
   void getPosts(){
     FirebaseFirestore.instance
         .collection('posts')
@@ -416,6 +414,20 @@ EbnakUserModel? userModel;
   Stream<QuerySnapshot<Map<String, dynamic>>> trytogetPosts() {
     return FirebaseFirestore.instance
         .collection('posts')
+        .orderBy('dateTime',descending: true)
+        .snapshots();
+  }
+
+  List<PostModel>Userposts=[];
+  List<String>UserPostsIds=[];
+  List<int>UserLikes=[];
+  List<commentModel> Usercommentmodel=[];
+
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> trytogetUserPosts() {
+    return FirebaseFirestore.instance
+        .collection('posts')
+        .where('uID',isEqualTo:uId)
         .orderBy('dateTime',descending: true)
         .snapshots();
   }

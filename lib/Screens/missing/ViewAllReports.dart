@@ -42,7 +42,6 @@ class ViewAllReports extends StatelessWidget {
                 color: Colors.redAccent.shade200,
                 height: getProportionateScreenHeight(250),
                 child: CachedNetworkImage(imageUrl: '${model.reportMissingImage}',),
-
               ),
                 Container(
                   color: Colors.redAccent.shade200,
@@ -56,14 +55,10 @@ class ViewAllReports extends StatelessWidget {
                           Row(children: [
                             Text('Name : ',style: TextStyle(color: Colors.white,fontSize: 17,fontWeight: FontWeight.bold),),
                             Text('${model.fullName}',style: TextStyle(fontSize: 17,fontWeight: FontWeight.bold,color: Colors.white),),
-
-
                           ],),
                           Row(children: [
                             Text('Age : ',style: TextStyle(color: Colors.white,fontSize: 17,fontWeight: FontWeight.bold),),
                             Text('${model.Age}',style: TextStyle(color: Colors.white,fontSize: 17,fontWeight: FontWeight.bold),),
-
-
                           ],),
                           Row(children: [
                             Text('Reporter Name : ',style: TextStyle(color: Colors.white,fontSize: 17,fontWeight: FontWeight.bold),),
