@@ -7,7 +7,7 @@ class reportMissingModel{
   late String name;
   late String? email;
   late String? uID;
-  late String? reportID;
+  String? reportID;
   late String? dateTime;
   String? image;
   String? fullName;
@@ -52,6 +52,7 @@ class reportMissingModel{
     dateTime=json?['dateTime'];
     persistedFaceId=json?['persistedFaceId'];
     location=json?['location'];
+    reportID=json?['reportID'];
 
 
 
@@ -72,6 +73,7 @@ class reportMissingModel{
       'image':image,
       'persistedFaceId':persistedFaceId,
       'location':location,
+      'reportID':reportID
 
 
 
@@ -95,6 +97,7 @@ class reportMissingModel{
     Information:snap['Information'],
       persistedFaceId:snap['persistedFaceId'],
       location: snap['location'],
+      reportID:snap['reportID'],
 
 
     );

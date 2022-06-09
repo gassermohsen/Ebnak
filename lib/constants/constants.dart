@@ -36,7 +36,7 @@ const String kAddressNullError = "Please Enter your address";
 String Subscription_Key='8f1f397a90dc4a87856c9a4f5dad4b98';
 
 
-String uId = '';
+String? uId = '';
 
 
 

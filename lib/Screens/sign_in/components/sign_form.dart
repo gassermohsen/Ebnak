@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../layout/ebnak/cubit/ebnak_cubit.dart';
 import '../../../layout/ebnak/ebnak_layout.dart';
 import '../../../shared/network/local/cache_helper.dart';
 import '../../../shared/re_useable_components.dart';
@@ -45,6 +46,10 @@ class _SignFormState extends State<SignForm> {
               }
               if(state is EbnakLoginSuccessState)
               {
+                print(state.uId);
+                uId=state.uId;
+                EbnakCubit.get(context).getUserData();
+
                 CacheHelper.saveData(
                   key: 'uId',
                   value: state.uId,

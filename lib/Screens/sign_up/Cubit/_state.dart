@@ -13,7 +13,11 @@ class EbnakRegisterErrorState extends EbnakRegisterStates
   EbnakRegisterErrorState(this.error);
 }
 
-class EbnakCreateUserSuccessState extends EbnakRegisterStates {}
+class EbnakCreateUserSuccessState extends EbnakRegisterStates {
+  final String uId;
+
+  EbnakCreateUserSuccessState(this.uId);
+}
 
 class EbnakCreateUserErrorState extends EbnakRegisterStates
 {

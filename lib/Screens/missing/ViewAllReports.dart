@@ -25,7 +25,7 @@ class ViewAllReports extends StatelessWidget {
               thickness:2,
               height: 40,
               color: Colors.grey[300],
-            ), itemCount: 10,shrinkWrap: true,),
+            ), itemCount: EbnakCubit.get(context).Reports.length,shrinkWrap: true,),
       ),
 
     );

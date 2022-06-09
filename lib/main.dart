@@ -76,7 +76,7 @@ class Ebnak extends StatelessWidget {
           create: (BuildContext context) => AppCubit()
 
             ),
-        BlocProvider(create: (context)=>EbnakCubit()..getUserData()..trytogetPosts()..getLikes()..getChildDeatils()..getReportDeatils()..trytogetUserPosts()),
+        BlocProvider(create: (context)=>EbnakCubit()..getUserData()..trytogetPosts()..getLikes()..getChildDeatils()..getReportDeatils()..trytogetUserPosts()..getUserReports()),
 
       ],
       child: BlocConsumer<AppCubit,AppStates>(
@@ -84,7 +84,7 @@ class Ebnak extends StatelessWidget {
         builder:(context,state){
     return MaterialApp(
     debugShowCheckedModeBanner: false,
-    title: 'Login',
+    title: 'Ebnak',
     theme: theme(),
     home: startWidget,
     // initialRoute: SplashScreen.routeName,

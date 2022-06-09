@@ -11,6 +11,7 @@ class PostModel{
   String? image;
   String? text;
   String? postImage;
+  String? postID;
 
   PostModel({
     required this.name,
@@ -21,6 +22,7 @@ class PostModel{
     this.uID,
     this.dateTime,
     this.image,
+    this.postID,
 
   });
   PostModel.FromJson(Map<String,dynamic>json){
@@ -31,6 +33,7 @@ class PostModel{
     image=json['image'];
     uID=json['uID'];
     dateTime=json['dateTime'];
+    postID=json['postID'];
 
 
   }
@@ -44,6 +47,7 @@ class PostModel{
       'uID':uID,
       'dateTime':dateTime,
       'image':image,
+      'postID':postID,
 
 
 
@@ -60,6 +64,7 @@ class PostModel{
       image: snap['image'],
       text: snap['text'],
       uID: snap['uID'],
+      postID: snap['postID'],
 
     );
     return postmodel;

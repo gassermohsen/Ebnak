@@ -13,10 +13,14 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:screenshot/screenshot.dart';
 
 import '../../components/default_Button.dart';
 import '../../models/comment_model.dart';
 import '../../models/post_model.dart';
+import '../../models/reportMissing_model.dart';
+import '../../shared/network/local/cache_helper.dart';
+import '../sign_in/sign_in_Screen.dart';
 
 class profileScreen extends StatelessWidget {
   TextEditingController commentController = TextEditingController();
@@ -25,15 +29,31 @@ class profileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return BlocConsumer<EbnakCubit, EbnakStates>(
-      listener: (context, state) {},
+      listener: (context, state) {
+        if(state is EbnakLogOutSuccessState){
+          CacheHelper.removeData(
+            key: 'uId',
+          ).then((value)
+          {
+            uId='';
+            EbnakCubit.get(context).userModel=null;
+            navigateAndFinish(
+              context,
+              SignInScreen(),
+            );
+            EbnakCubit.get(context).currentIndex=0;
+          });
+        }
+
+      },
       builder: (context, state) {
         var userModel = EbnakCubit
             .get(context)
             .userModel;
         return DefaultTabController(
-          length: 3,
+          length: 2,
           child: Scaffold(
-            backgroundColor: Colors.grey[300],
+            backgroundColor: Colors.grey[200],
             body: Column(
               children: [
                 Container(
@@ -109,8 +129,11 @@ class profileScreen extends StatelessWidget {
 
                             ),
 
-                            onPressed: () {},
-                            child: Icon(IconBroken.Message,
+                            onPressed: () {
+                              EbnakCubit.get(context).LogOut();
+
+                            },
+                            child: Icon(IconBroken.Logout,
                               color: Colors.grey[400],
 
                             ),
@@ -136,15 +159,11 @@ class profileScreen extends StatelessWidget {
                               color: Colors.grey,),
                           ),
                           Tab(
-                            text: 'My Reports',
+                            text: 'Reports',
                             icon: Icon(IconBroken.Danger,
                               color: Colors.grey,),
                           ),
-                          Tab(
-                            text: 'About',
-                            icon: Icon(IconBroken.Profile,
-                              color: Colors.grey,),
-                          ),
+
                         ],
 
                       ),
@@ -235,8 +254,6 @@ class profileScreen extends StatelessWidget {
                                       ),
                                       SizedBox(height: getProportionateScreenHeight(20),),
 
-
-
                                     ],
 
                                   ),
@@ -249,8 +266,14 @@ class profileScreen extends StatelessWidget {
                                 )),
 
                           ),
-                          Text('Reports'),
-                          Text('About'),
+                          ListView.separated
+
+                            (itemBuilder: (context,index)=>buildUserReportsItem(EbnakCubit.get(context).UserReports[index],context,index),
+                            separatorBuilder:(context,index)=> Divider(
+                              thickness:2,
+                              height: 5,
+                              color: Colors.grey[300],
+                            ), itemCount: EbnakCubit.get(context).UserReports.length,shrinkWrap: true,),
                         ]),
                   ),
                 )
@@ -261,6 +284,142 @@ class profileScreen extends StatelessWidget {
         );
       },
     );
+  }
+
+  SingleChildScrollView buildUserReportsItem(reportMissingModel model,context ,index) {
+    return SingleChildScrollView(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                              width: double.infinity,
+                              height: getProportionateScreenHeight(250),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                  border: Border.all(
+                                    color: Colors.black87,
+                                    width: 1,
+                                  )
+                              ),
+                              child: Stack(
+                                children:[
+                                  Positioned(
+                                    left: 140,
+                                      child: Center(child: Row(
+                                        children: [
+                                          Icon(
+                                            IconBroken.Danger,
+                                            color: Colors.red,
+                                          ),
+                                          SizedBox(width: 3,),
+                                          Text('MISSING',style: TextStyle(color: Colors.red,fontSize: 20,fontWeight: FontWeight.bold),),
+                                        ],
+                                      ))),
+                                  Positioned(
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(top: 35.0),
+                                        child: Container(
+                                          height: getProportionateScreenHeight(250),
+                                          width: getProportionateScreenWidth(150),
+                                          decoration: BoxDecoration(
+                                            color: Colors.red,
+
+                                            borderRadius: BorderRadius.all(Radius.circular(20)),
+
+                                          ),
+                                          child: Image(
+                                            fit: BoxFit.cover,
+                                            image: NetworkImage('${model.reportMissingImage}'),
+                                          ),
+                                        ),
+                                      )),
+                                  Positioned(
+                                    left: 160,
+                                      top: 35,
+                                      child: Container(
+                                        height: getProportionateScreenHeight(220),
+                                        width: getProportionateScreenWidth(250),
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color: Colors.black87,
+                                            width: 0.5,
+                                          )
+                                        ),
+                                        child: SingleChildScrollView(
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.only(left: 4.0,top: 5),
+                                                child: Text('Name : ${model.fullName} ',style: TextStyle(color: Colors.black54,fontWeight: FontWeight.bold,fontSize: 17),),
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.only(left: 4.0,top: 5),
+                                                child: Text('Age : ${model.Age} ',style: TextStyle(color: Colors.black54,fontWeight: FontWeight.bold,fontSize: 17),),
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.only(left: 4.0,top: 5),
+                                                child: Text('Date : ${model.dateTime} ',style: TextStyle(color: Colors.black54,fontWeight: FontWeight.bold,fontSize: 17),),
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.only(left: 4.0,top: 5),
+                                                child: Text('Information :${model.Information} ',style: TextStyle(color: Colors.black54,fontWeight: FontWeight.bold,fontSize: 17),),
+                                              ),
+
+                                              Padding(
+                                                padding: const EdgeInsets.only(left: 25.0,top: 5),
+                                                child: Container(
+                                                  width: getProportionateScreenWidth(150),
+                                                  child: OutlinedButton(onPressed: (){
+                                                    showDialog<String>(
+                                                      context: context,
+                                                      builder: (BuildContext context) => AlertDialog(
+
+                                                        title: const Text('Delete'),
+                                                        content: const Text('Are you sure you want to delete this Report ! '),
+                                                        actions: <Widget>[
+                                                          TextButton(
+                                                            onPressed: () => Navigator.pop(context, 'Cancel'),
+                                                            child: const Text('Cancel',style: TextStyle(color: Colors.grey),),
+                                                          ),
+                                                          TextButton(
+                                                            onPressed: () {
+                                                              Navigator.pop(context, 'Cancel');
+                                                              EbnakCubit.get(context).DeleteReport(ReportID: model.reportID,PresistedFace: model.persistedFaceId);
+                                                            },
+                                                            child: const Text('OK',style: TextStyle(color:Colors.green)),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    );
+                                                  },
+                                                      style: OutlinedButton.styleFrom(
+                                                        side: BorderSide(width: 1.0, color: Colors.red),
+                                                      ),
+
+                                                      child: Row(
+                                                        children: [
+                                                          Icon(
+                                                            IconBroken.Delete,
+                                                            color: Colors.red,
+                                                          ),
+                                                          SizedBox(width: 3,),
+                                                          Text('Delete Report',style: TextStyle(color: Colors.red),),
+                                                        ],
+                                                      )),
+                                                ),
+                                              )
+
+                                            ],
+
+                                          ),
+                                        ),
+
+                                  ))
+                            ],
+                              ),
+                            ),
+                          )
+                        );
   }
 
 

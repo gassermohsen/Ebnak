@@ -149,3 +149,32 @@ class EbnakFindSimilarErrorState extends EbnakStates {}
 class EbnakGetDetectedLoadingState extends EbnakStates {}
 class EbnakGetDetectedSuccessState extends EbnakStates {}
 class EbnakGetDetectedErrorState extends EbnakStates {}
+
+
+
+//Delete Post
+
+class EbnakDeletePostLoadingState extends EbnakStates {}
+class EbnakDeletePostSuccessState extends EbnakStates {}
+class EbnakDeletePostErrorState extends EbnakStates {}
+
+
+
+//Update Post
+
+class EbnakUpdatePostLoadingState extends EbnakStates {}
+class EbnakUpdatePostSuccessState extends EbnakStates {}
+class EbnakUpdatePostErrorState extends EbnakStates {}
+
+
+//Delete Post
+
+class EbnakDeleteReportLoadingState extends EbnakStates {}
+class EbnakDeleteReportSuccessState extends EbnakStates {}
+class EbnakDeleteReportErrorState extends EbnakStates {}
+
+//Logout User
+
+class EbnakLogOutLoadingState extends EbnakStates {}
+class EbnakLogOutSuccessState extends EbnakStates {}
+class EbnakLogOutErrorState extends EbnakStates {}

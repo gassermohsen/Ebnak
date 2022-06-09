@@ -13,6 +13,7 @@ import 'package:ebnak1/constants/constants.dart';
 import 'package:ebnak1/models/adoption_model.dart';
 import 'package:ebnak1/models/findSimilar_model.dart';
 import 'package:ebnak1/models/post_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -36,19 +37,38 @@ class EbnakCubit extends Cubit<EbnakStates>
 
 
 
-EbnakUserModel? userModel;
+ EbnakUserModel? userModel;
 
 
   void getUserData() {
     emit(EbnakGetUserLoadingState());
 
-    FirebaseFirestore.instance.collection('users').doc(uId).get().then((value) {
+     FirebaseFirestore.instance.collection('users').doc(uId).get().then((value) {
       print(value.data());
       userModel = EbnakUserModel.FromJson(value.data()!);
       emit(EbnakGetUserSuccessState());
     }).catchError((error) {
       print(error.toString());
       emit(EbnakGetUserErrorState(error.toString()));
+    });
+  }
+
+  void LogOut(){
+    emit(EbnakLogOutLoadingState());
+    FirebaseAuth.instance.signOut().then((value) {
+      // userModel?.image='';
+      // userModel?.name='';
+      // userModel?.dateOfBirth='';
+      // userModel?.email='';
+      // userModel?.uID='';
+      // userModel?.address='';
+      // userModel?.haveChildren=false;
+      // userModel?.phone='';
+      // userModel?.bio='';
+
+      emit(EbnakLogOutSuccessState());
+    }).catchError((onError){
+      emit(EbnakLogOutErrorState());
     });
   }
   
@@ -247,6 +267,7 @@ EbnakUserModel? userModel;
     required String? dateTime,
     required String? text,
     String? postImage,
+    String? postID,
   }){
 
     emit(EbnakCreatePostLoadingState());
@@ -262,6 +283,7 @@ EbnakUserModel? userModel;
       email: userModel?.email,
       image: userModel?.image,
       uID: userModel?.uID,
+      postID: postID,
     );
 
 
@@ -270,10 +292,51 @@ EbnakUserModel? userModel;
         model.toMap())
         .then((value) {
           FirebaseFirestore.instance.collection('users').doc(uId).collection('userposts').add(model.toMap());
+          FirebaseFirestore.instance.collection('posts')
+              .doc(value.id)
+              .update({
+            'postID': value.id,
+          });
+
           emit(EbnakCreatePostSuccessState());
     })
         .catchError((onError){
       emit(EbnakCreatePostErrorState());
+    });
+
+  }
+
+  void deletePost({
+   String? postID
+}){
+    emit(EbnakDeletePostLoadingState());
+
+    FirebaseFirestore.instance.collection('posts').doc(postID).delete().then((value) {
+      emit(EbnakDeletePostSuccessState());
+
+    }).catchError((onError){
+      emit(EbnakDeletePostErrorState());
+    });
+
+}
+
+
+
+
+  void UpdatePost({
+    String? postID,
+    String? text
+  }){
+    emit(EbnakUpdatePostLoadingState());
+
+    FirebaseFirestore.instance.collection('posts').doc(postID).update({
+    'text':text
+    }
+    ).then((value) {
+      emit(EbnakUpdatePostSuccessState());
+
+    }).catchError((onError){
+      emit(EbnakUpdatePostErrorState());
     });
 
   }
@@ -917,11 +980,63 @@ List<reportMissingModel>Reports=[];
     });
   }
 
+  List<reportMissingModel>UserReports=[];
+  void getUserReports(){
+    FirebaseFirestore.instance.collection('Reports')
+        .where('uID',isEqualTo: uId)
+        .snapshots()
+        .listen((value) {
+      UserReports=[];
+      value.docs.forEach((element) {
+        UserReports.add(reportMissingModel.FromJson(element.data()));
+      });
+      print(UserReports.length);
+    });
+  }
+
+
+
+  void DeleteReport({
+    String? ReportID,
+    String? PresistedFace,
+  }){
+    emit(EbnakDeleteReportLoadingState());
+    FirebaseFirestore.instance.collection('Reports')
+        .doc(ReportID)
+        .delete()
+        .then((value)  {
+       DeletePresistedFace(PresistedFace);
+      emit(EbnakDeleteReportSuccessState());
+
+    }).catchError((onError){
+      emit(EbnakDeleteReportErrorState());
+    });
+  }
+
+  Future DeletePresistedFace(
+      String? presistedFace,
+      )async{
+    var headers = {
+      'Ocp-Apim-Subscription-Key': Subscription_Key
+    };
+    var request = http.Request('DELETE', Uri.parse('https://Childarity.cognitiveservices.azure.com/face/v1.0/largefacelists/ebnak_01/persistedfaces/${presistedFace}'));
+
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      print(await response.stream.bytesToString());
+    }
+    else {
+      print(response.reasonPhrase);
+    }
+  }
+
 
 
 
 }
-
 
 
 

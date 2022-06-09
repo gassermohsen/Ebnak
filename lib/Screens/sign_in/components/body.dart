@@ -7,6 +7,7 @@ import 'package:ebnak1/Screens/sign_up/sign_up_screen.dart';
 import 'package:ebnak1/Size_config/size_config.dart';
 import 'package:ebnak1/components/default_Button.dart';
 import 'package:ebnak1/constants/constants.dart';
+import 'package:ebnak1/shared/re_useable_components.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -56,7 +57,7 @@ class SignInBody extends StatelessWidget {
                   children: [
                     Text("Don't have an account?",style: TextStyle(fontSize: getProportionateScreenWidth(16)),),
                     GestureDetector(
-                      onTap: ()=>Navigator.pushNamed(context, SignUpScreen.routeName),
+                      onTap: ()=>navigateTo(context, SignUpScreen()),
                       child: Text("Sign Up",style: TextStyle(fontSize: getProportionateScreenWidth(16),
                           color: kPrimaryColor),) ,
                     )

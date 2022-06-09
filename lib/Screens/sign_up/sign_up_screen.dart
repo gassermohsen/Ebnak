@@ -8,6 +8,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../Size_config/size_config.dart';
 import '../../components/default_Button.dart';
 import '../../constants/constants.dart';
+import '../../layout/ebnak/cubit/ebnak_cubit.dart';
+import '../../shared/network/local/cache_helper.dart';
 import '../../shared/re_useable_components.dart';
 import '../sign_in/components/form_error.dart';
 import '../sign_in/components/sign_form.dart';
@@ -76,10 +78,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
       child: BlocConsumer<EbnakRegisterCubit, EbnakRegisterStates>(
           listener: (context, state) {
             if (state is EbnakCreateUserSuccessState) {
-              navigateAndFinish(
-                context,
-                EbnakLayout(),
-              );
+
+              print(state.uId);
+              uId=state.uId;
+              EbnakCubit.get(context).getUserData();
+
+              CacheHelper.saveData(
+                key: 'uId',
+                value: state.uId,
+              ).then((value)
+              {
+                navigateAndFinish(
+                  context,
+                  EbnakLayout(),
+                );
+              });
             }
           },
           builder: (context, state) {

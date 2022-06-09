@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../Size_config/size_config.dart';
 import 'Cubit/cubit.dart';
 import 'components/body.dart';
 
@@ -11,6 +12,7 @@ class SignInScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     return BlocProvider(
       create: (context) => EbnakLoginCubit(),
       child: BlocConsumer<EbnakLoginCubit,EbnakLoginStates>(

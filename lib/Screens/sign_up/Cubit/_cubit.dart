@@ -86,7 +86,7 @@ class EbnakRegisterCubit extends Cubit<EbnakRegisterStates> {
     ).doc(uID)
      .set(model.toMap()).
     then((value) {
-      emit(EbnakCreateUserSuccessState());
+      emit(EbnakCreateUserSuccessState(uID));
     }).
     catchError((onError){
       emit(EbnakCreateUserErrorState(onError.toString()));
