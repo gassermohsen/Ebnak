@@ -42,6 +42,7 @@ class profileScreen extends StatelessWidget {
               SignInScreen(),
             );
             EbnakCubit.get(context).currentIndex=0;
+            EbnakCubit.get(context).UserReports=[];
           });
         }
 

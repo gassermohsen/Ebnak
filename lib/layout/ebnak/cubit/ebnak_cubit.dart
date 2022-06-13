@@ -20,6 +20,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import '../../../Screens/community/community_Screen_test.dart';
 import '../../../models/addFace_model.dart';
+import '../../../models/articles_model.dart';
 import '../../../models/comment_model.dart';
 import '../../../models/detectFace_model.dart';
 import '../../../models/reportMissing_model.dart';
@@ -1033,6 +1034,16 @@ List<reportMissingModel>Reports=[];
     }
   }
 
+  List<articlesModel>articleModel=[];
+
+
+  void getArticles(){
+    FirebaseFirestore.instance.collection('articles').get().then((value) {
+      value.docs.forEach((element) {
+        articleModel.add(articlesModel.FromJson(element.data()));
+      });
+    });
+  }
 
 
 

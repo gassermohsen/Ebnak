@@ -49,6 +49,9 @@ class _SignFormState extends State<SignForm> {
                 print(state.uId);
                 uId=state.uId;
                 EbnakCubit.get(context).getUserData();
+                EbnakCubit.get(context).getUserReports();
+
+
 
                 CacheHelper.saveData(
                   key: 'uId',
