@@ -128,11 +128,17 @@ class _HomeScreenState extends State<HomeScreen> {
                     padding: const EdgeInsets.only(left: 8.0,top: 10),
                     child: Container(
                       width: getProportionateScreenWidth(175),
-                      height: getProportionateScreenHeight(120),
+                      height: getProportionateScreenHeight(100),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
-                        color: Colors.red[300],
-                      ),
+                          gradient: LinearGradient(
+                            begin: Alignment.topRight,
+                            end: Alignment.bottomLeft,
+                            colors: [
+                              Colors.red,
+                              Colors.black,
+                            ],
+                          )                      ),
                       child: Center(child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -148,10 +154,17 @@ class _HomeScreenState extends State<HomeScreen> {
                     padding: const EdgeInsets.only(left: 8.0,top: 10),
                     child: Container(
                       width: getProportionateScreenWidth(175),
-                      height: getProportionateScreenHeight(120),
+                      height: getProportionateScreenHeight(100),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
-                        color: kPrimaryColor.withOpacity(0.4),
+                          gradient: LinearGradient(
+                            begin: Alignment.topRight,
+                            end: Alignment.bottomLeft,
+                            colors: [
+                              kPrimaryColor,
+                              Colors.grey.shade300,
+                            ],
+                          )
                       ),
                       child: Center(child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,

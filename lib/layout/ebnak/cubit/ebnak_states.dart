@@ -186,6 +186,13 @@ class EbnakCreateMemberLoadingState extends EbnakStates {}
 class EbnakCreateMemberSuccessState extends EbnakStates {}
 class EbnakCreatememberErrorState extends EbnakStates {}
 
+
+
+// get UserMembersReports
+class EbnakGetUserMembersLoadingState extends EbnakStates {}
+class EbnakGetUserMembersSuccessState extends EbnakStates {}
+class EbnakGetUserMembersErrorState extends EbnakStates {}
+
 // // create Report
 // class EbnakCreateReportLoadingState extends EbnakStates {}
 // class EbnakCreateReportSuccessState extends EbnakStates {}

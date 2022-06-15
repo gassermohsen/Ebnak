@@ -1199,7 +1199,102 @@ List<reportMissingModel>Reports=[];
 
   });
   }
-  
+
+  List<addMemberModel>userMembersForReport=[];
+
+  void getuserMembersForReport(){
+    emit(EbnakGetUserMembersLoadingState());
+     FirebaseFirestore.instance.collection('users').doc(uId).collection('userMembers').get()
+        .then((value){
+       userMembersForReport=[];
+      value.docs.forEach((element) {
+        userMembersForReport.add(addMemberModel.FromJson(element.data()));
+      });
+          emit(EbnakGetUserMembersSuccessState());
+    }).catchError((onError){
+      emit(EbnakGetUserMembersErrorState());
+     });
+  }
+
+
+
+
+
+
+
+
+
+  late reportMissingModel reportChildrenModel;
+  late String reportChildID;
+  addFaceModel? myChildfaceModel;
+
+  Future<void> createReportmyChildren({
+
+    required String? dateTime,
+    required String? fullName,
+    required String? Age,
+    required String? Info,
+    required String? MissingAddress,
+    required String? reportID,
+     String? persistedFaceId,
+    required GeoPoint? currentLocation,
+
+    required String? reportMissingImage,
+  }) async {
+
+    emit(EbnakCreateReportLoadingState());
+
+
+
+    reportChildrenModel =reportMissingModel(
+      fullName: fullName,
+      Age:Age ,
+      MissingAddress: userModel!.address,
+      Information: Info,
+      reportMissingImage:reportMissingImage??'',
+      name: userModel!.name,
+      dateTime: dateTime,
+      email: userModel?.email,
+      image: userModel?.image,
+      uID: userModel?.uID,
+      phoneNumber: userModel?.phone,
+      reportID: reportID,
+      persistedFaceId: persistedFaceId,
+      location: currentLocation,
+
+
+    );
+    await addFace(reportMissingImage);
+
+    FirebaseFirestore.instance.collection('Reports')
+        .add(
+        reportChildrenModel.toMap())
+        .then((value)  {
+      reportChildrenModel.reportID==value.id;
+      reportChildID = value.id;
+
+      print(reportChildID);
+      FirebaseFirestore.instance.collection('Reports')
+          .doc(value.id)
+          .update({
+        'reportID': value.id,
+        'persistedFaceId':faceModel?.persistedFaceId
+      });
+
+
+
+
+      emit(EbnakCreateReportSuccessState());
+    })
+        .catchError((onError){
+      emit(EbnakCreateReportErrorState());
+    });
+
+  }
+
+
+
+
 
 
 }

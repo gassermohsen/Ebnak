@@ -44,6 +44,7 @@ class profileScreen extends StatelessWidget {
             );
             EbnakCubit.get(context).currentIndex=0;
             EbnakCubit.get(context).UserReports=[];
+            EbnakCubit.get(context).userMembersForReport=[];
           });
         }
 

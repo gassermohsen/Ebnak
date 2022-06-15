@@ -12,6 +12,7 @@ import '../../constants/constants.dart';
 import '../../layout/ebnak/ebnak_layout.dart';
 import 'detectionDetails_Screen.dart';
 import 'missing_Screen.dart';
+import 'noMatching_Screen.dart';
 
 class ImageDetectionScreen extends StatelessWidget {
   const ImageDetectionScreen({Key? key}) : super(key: key);
@@ -20,8 +21,12 @@ class ImageDetectionScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<EbnakCubit, EbnakStates>(
       listener: (context, state) {
-        if (state is EbnakGetDetectedSuccessState )
+        if (state is EbnakGetDetectedSuccessState ) {
           PushReplacment(context, DetailsDetectionScreen());
+        }
+        if(state is EbnakDetectionErrorState){
+          PushReplacment(context, NoMatchingScreen());
+        }
       },
       builder: (context, state) {
         var DetectionImage=EbnakCubit.get(context).DetectionImage;
