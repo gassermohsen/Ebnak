@@ -4,12 +4,13 @@ import 'package:ebnak1/constants/constants.dart';
 import 'package:ebnak1/layout/ebnak/cubit/ebnak_cubit.dart';
 import 'package:ebnak1/layout/ebnak/cubit/ebnak_states.dart';
 import 'package:ebnak1/models/articles_model.dart';
+import 'package:ebnak1/models/shortArticles_model.dart';
 import 'package:ebnak1/styles/icon_broken.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:jiffy/jiffy.dart';
 import 'package:url_launcher/url_launcher_string.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class  HomeScreen extends StatefulWidget {
 
@@ -21,6 +22,8 @@ class _HomeScreenState extends State<HomeScreen> {
   var color;
   var color2;
 
+  var now = Jiffy().format("yyyy-MM-dd HH:mm:ss");
+  var dateNow = Jiffy().yMMMMd;
 
 
   Future<void> launchURL({
@@ -64,94 +67,237 @@ class _HomeScreenState extends State<HomeScreen> {
     return  Scaffold(
         backgroundColor: Colors.grey[100],
 
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 8.0,top: 10),
-                  child: Container(
-                    width: getProportionateScreenWidth(175),
-                    height: getProportionateScreenHeight(150),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: Colors.red[300],
-                    ),
-                    child: Center(child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text('Missing ',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.white),),
-                        Text('21',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.white),),
 
+        body: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
 
-                      ],
-                    )),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: getProportionateScreenHeight(20),),
+                  Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: Container(
+                          width: getProportionateScreenWidth(70),
+                          height: getProportionateScreenHeight(80),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(20),
+                            image: DecorationImage(fit: BoxFit.cover,
+                              image: NetworkImage('${EbnakCubit.get(context).userModel?.image}',),
+                            ),
+                          ),
+
+                        ),
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8.0),
+                            child: Text('Welcome Back ! ',style: TextStyle(color: Colors.black,fontSize: 17,fontWeight: FontWeight.bold),),
+                          ),
+
+                          SizedBox(height: getProportionateScreenHeight(3),),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8.0),
+                            child: Text(dateNow,textAlign: TextAlign.start,style: TextStyle(color: Colors.grey,fontSize: 13,fontWeight: FontWeight.bold),),
+                          ),
+
+                        ],
+                      )
+                    ],
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 8.0,top: 10),
-                  child: Container(
-                    width: getProportionateScreenWidth(175),
-                    height: getProportionateScreenHeight(150),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: kPrimaryColor.withOpacity(0.4),
-                    ),
-                    child: Center(child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text('Adopted ',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.white),),
-                        Text('21',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.white),),
 
-
-                      ],
-                    )),
-                  ),
-                ),
-              ],
-            ),
-            
-
-            
-            
-
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Text('Popular Articles',style: TextStyle(color: Colors.grey[600],fontSize: 25,fontWeight: FontWeight.bold),),
-            ),
-
-            Container(
-            height: getProportionateScreenHeight(380),
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                shrinkWrap: true,
-
-                itemBuilder: (BuildContext context, int index) {
-                  return  buildArticleCard(EbnakCubit.get(context).articleModel[index],context,index);},
-
-                separatorBuilder: (BuildContext context, int index) =>
-                  SizedBox(width: getProportionateScreenWidth(0),)
-
-              , itemCount: EbnakCubit.get(context).articleModel.length,
-
+                ],
               ),
-            ),
+              SizedBox(height: getProportionateScreenHeight(25),),
+
+
+
+              Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0,top: 10),
+                    child: Container(
+                      width: getProportionateScreenWidth(175),
+                      height: getProportionateScreenHeight(120),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.red[300],
+                      ),
+                      child: Center(child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text('Missing ',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.white),),
+                          Text('21',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.white),),
+
+
+                        ],
+                      )),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0,top: 10),
+                    child: Container(
+                      width: getProportionateScreenWidth(175),
+                      height: getProportionateScreenHeight(120),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: kPrimaryColor.withOpacity(0.4),
+                      ),
+                      child: Center(child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text('Adopted ',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.white),),
+                          Text('21',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.white),),
+
+
+                        ],
+                      )),
+                    ),
+                  ),
+                ],
+              ),
+
+
+
+              Padding(
+                padding: const EdgeInsets.only(left: 20.0,right: 20,top: 20,bottom: 10),
+                child: Text('Popular Articles',style: TextStyle(color: Colors.grey[600],fontSize: 25,fontWeight: FontWeight.bold),),
+              ),
+
+              Container(
+              height: getProportionateScreenHeight(380),
+                child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  shrinkWrap: true,
+
+                  itemBuilder: (BuildContext context, int index) {
+                    return  buildArticleCard(EbnakCubit.get(context).articleModel[index],context,index);},
+
+                  separatorBuilder: (BuildContext context, int index) =>
+                    SizedBox(width: getProportionateScreenWidth(0),)
+
+                , itemCount: EbnakCubit.get(context).articleModel.length,
+
+                ),
+              ),
 
 
 
 
 
+              Padding(
+                padding: const EdgeInsets.only(left: 20.0,right: 10,top: 10,bottom: 5),
+                child: Text('Short For You',style: TextStyle(color: Colors.grey[600],fontSize: 23,fontWeight: FontWeight.bold),),
+              ),
+
+
+              Container(
+                height: getProportionateScreenHeight(130),
+                child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  shrinkWrap: true,
+
+                  itemBuilder: (BuildContext context, int index) {
+                    return  buildIShortArticle(EbnakCubit.get(context).shortArticleModel[index],context,index);},
+
+                  separatorBuilder: (BuildContext context, int index) =>
+                      SizedBox(width: getProportionateScreenWidth(0),)
+
+                  , itemCount: EbnakCubit.get(context).shortArticleModel.length,
+
+                ),
+              ),
 
 
 
-
-          ],
+            ],
+          ),
         ),
       );
     },
     );
+  }
+
+  InkWell buildIShortArticle(shortArticlesModel model,context,index) {
+    return InkWell(
+              onTap: (){
+                launchURL(modelUrl: '${model.articleUrl}');
+
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Container(
+                  width: getProportionateScreenWidth(230),
+                  height: getProportionateScreenHeight(120),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: Colors.white,
+
+                            ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: Center(
+                              child: Image(
+                                width: getProportionateScreenWidth(70),
+                                fit: BoxFit.fill,
+                                image: NetworkImage('${model.articleImage}',),
+
+                              ),
+                            ),
+                          ),
+
+                            ),
+                      ),
+                      Flexible(
+                        flex: 3,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 8.0,left: 3,right: 3,bottom: 8),
+                          child: Column(
+                            children: [
+                              Text('${model.articleFeed}',
+                                maxLines: 2,
+
+
+                                style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 14,fontStyle: FontStyle.italic,overflow: TextOverflow.ellipsis),),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 5.0,left: 3,right: 3,bottom: 0),
+                                child: Row(children: [
+                                  Icon(IconBroken.Show,size: 18,color: Colors.grey,),
+                                  SizedBox(width: getProportionateScreenWidth(3),),
+                                  Text('${model.articleViews}',style: TextStyle(fontSize: 12,color: Colors.grey,),)
+                                ],),
+                              )
+                            ],
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            );
   }
 
 
@@ -162,7 +308,7 @@ class _HomeScreenState extends State<HomeScreen> {
         launchURL(modelUrl: '${model.articleUrl}');
       },
       child: Padding(
-                padding: const EdgeInsets.all(15.0),
+                padding: const EdgeInsets.only(top: 10.0,bottom: 15,left: 15),
                 child: Container(
                 width: getProportionateScreenWidth(250),
 

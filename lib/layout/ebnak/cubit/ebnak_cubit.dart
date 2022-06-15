@@ -13,6 +13,7 @@ import 'package:ebnak1/constants/constants.dart';
 import 'package:ebnak1/models/adoption_model.dart';
 import 'package:ebnak1/models/findSimilar_model.dart';
 import 'package:ebnak1/models/post_model.dart';
+import 'package:ebnak1/models/shortArticles_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,6 +21,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import '../../../Screens/community/community_Screen_test.dart';
 import '../../../models/addFace_model.dart';
+import '../../../models/addMember_model.dart';
 import '../../../models/articles_model.dart';
 import '../../../models/comment_model.dart';
 import '../../../models/detectFace_model.dart';
@@ -111,6 +113,23 @@ class EbnakCubit extends Cubit<EbnakStates>
     final  XFile? pickedImage = await picker.pickImage(source: ImageSource.gallery);
     if (pickedImage != null) {
       profileImage = File(pickedImage.path);
+      print(pickedImage.path);
+      emit(EbnakProfileImagePickedSuccessState());
+    } else {
+      print('No image selected.');
+      emit(EbnakProfileImagePickedErrorState());
+    }
+  }
+
+
+  File? memberImage;
+  ImagePicker memberPicker = ImagePicker();
+
+  Future<void> getMemberImage() async {
+
+    final  XFile? pickedImage = await memberPicker.pickImage(source: ImageSource.gallery);
+    if (pickedImage != null) {
+      memberImage = File(pickedImage.path);
       print(pickedImage.path);
       emit(EbnakProfileImagePickedSuccessState());
     } else {
@@ -1045,6 +1064,142 @@ List<reportMissingModel>Reports=[];
     });
   }
 
+  List<shortArticlesModel>shortArticleModel=[];
+
+
+  void getShortArticles(){
+    FirebaseFirestore.instance.collection('shortArticles').get().then((value) {
+      value.docs.forEach((element) {
+        shortArticleModel.add(shortArticlesModel.FromJson(element.data()));
+      });
+    });
+  }
+
+
+
+  late addMemberModel memberModel;
+  late String memberID;
+
+  Future createMember({
+
+    required String? fullName,
+    required String? Age,
+    required String? Info,
+    required String? memberID,
+    required String? height,
+    required String? weight,
+
+    String? memberImage,
+  }){
+
+    emit(EbnakCreateMemberLoadingState());
+
+
+
+    memberModel =addMemberModel(
+      fullName: fullName,
+      Age:Age ,
+      Information: Info,
+      memberImage:memberImage??'' ,
+      name: userModel!.name,
+      email: userModel?.email,
+      image: userModel?.image,
+      uID: userModel?.uID,
+      phoneNumber: userModel?.phone,
+      memberID: memberID,
+      weight: weight,
+      height: height,
+
+
+
+    );
+
+
+  return  FirebaseFirestore.instance.collection('usersMembers')
+        .add(
+        memberModel.toMap())
+        .then((value)  {
+      memberModel.memberID==value.id;
+      memberID = value.id;
+
+      print(memberID);
+      FirebaseFirestore.instance.collection('usersMembers')
+          .doc(value.id)
+          .update({
+        'memberID': value.id,
+      });
+
+      FirebaseFirestore.instance.collection('users').doc(uId).collection('userMembers').add(memberModel.toMap()).then((value2){
+        FirebaseFirestore.instance.collection('users').doc(uId).collection('userMembers').doc(value2.id).update({
+          'memberID': value2.id,
+        });
+      });
+
+
+      emit(EbnakCreateMemberSuccessState());
+    })
+        .catchError((onError){
+      emit(EbnakCreatememberErrorState());
+    });
+
+  }
+
+
+
+  Future UploadMemberImage({
+    required String? fullName,
+    required String? Age,
+    required String? Info,
+    required String? height,
+    required String? weight,
+  }){
+    emit(EbnakCreateMemberLoadingState());
+  return  firebase_storage.FirebaseStorage.instance
+        .ref()
+        .child('usersMembers/${Uri.file(memberImage!.path).pathSegments.last}')
+        .putFile(memberImage!)
+        .then((value) {
+      value.ref.getDownloadURL().then((value)async {
+        // emit(EbnakUploadProfileImageSuccessState());
+        print(value);
+       await createMember(
+          fullName: fullName,
+          Info: Info,
+          Age: Age,
+          memberID: '',
+          height: height,
+          weight: weight,
+          memberImage: value,
+        );
+
+
+
+
+      }).catchError((onError){
+        emit(EbnakCreateMemberSuccessState());
+      });
+    })
+        .catchError((onError){
+      emit(EbnakCreatememberErrorState());
+
+    });
+  }
+
+
+  List<addMemberModel>userMembers=[];
+  
+  Future getuserMembers(){
+    
+   return FirebaseFirestore.instance.collection('users').doc(uId).collection('userMembers').get()
+        .then((value){
+       value.docs.forEach((element) {
+         userMembers.add(addMemberModel.FromJson(element.data()));
+       });
+       print(userMembers[0].memberID);
+
+  });
+  }
+  
 
 
 }

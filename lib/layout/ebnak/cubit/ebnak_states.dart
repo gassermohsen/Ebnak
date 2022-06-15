@@ -178,3 +178,15 @@ class EbnakDeleteReportErrorState extends EbnakStates {}
 class EbnakLogOutLoadingState extends EbnakStates {}
 class EbnakLogOutSuccessState extends EbnakStates {}
 class EbnakLogOutErrorState extends EbnakStates {}
+
+
+
+// create member
+class EbnakCreateMemberLoadingState extends EbnakStates {}
+class EbnakCreateMemberSuccessState extends EbnakStates {}
+class EbnakCreatememberErrorState extends EbnakStates {}
+
+// // create Report
+// class EbnakCreateReportLoadingState extends EbnakStates {}
+// class EbnakCreateReportSuccessState extends EbnakStates {}
+// class EbnakCreateReportErrorState extends EbnakStates {}

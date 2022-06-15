@@ -14,6 +14,7 @@ import '../../shared/re_useable_components.dart';
 import '../sign_in/components/form_error.dart';
 import '../sign_in/components/sign_form.dart';
 import '../sign_in/components/social_card.dart';
+import '../user_Children/add_userChildren_Screen.dart';
 import 'Cubit/_cubit.dart';
 import 'Cubit/_state.dart';
 import 'components/sign_up_form.dart';
@@ -56,6 +57,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   var addressController = TextEditingController();
 
   var dateCtl = TextEditingController();
+  bool _value = false;
 
   void addError({String? error}) {
     if (!errors.contains(error))
@@ -94,6 +96,24 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 );
               });
             }
+            if (state is EbnakCreateUserSuccessState && _value == true) {
+
+              print(state.uId);
+              uId=state.uId;
+              EbnakCubit.get(context).getUserData();
+
+              CacheHelper.saveData(
+                key: 'uId',
+                value: state.uId,
+              ).then((value)
+              {
+                navigateAndFinish(
+                  context,
+                  addUserChildrenScreen(),
+                );
+              });
+            }
+
           },
           builder: (context, state) {
             return Scaffold(
@@ -211,6 +231,27 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     dateCtl.text = date.toString().substring(0, 10);
                                   }
                               ),
+                              SizedBox(
+                                height: getProportionateScreenHeight(15),
+                              ),
+
+                              Row(
+                                children: [
+                                  Text('Check if you have children',),
+                                  Checkbox(
+                                    value: _value,
+                                    checkColor: Colors.white,
+                                    activeColor: kPrimaryColor,
+                                    onChanged: (bool? newvalue) {
+                                      setState(() {
+                                        _value = newvalue!;
+                                        print(_value);
+                                      });
+                                    },
+                                  ), //Checkbox
+                                ],
+                              ),
+
 
 
                               SizedBox(
@@ -218,8 +259,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               ),
                               FormError(errors: errors),
                               SizedBox(
-                                height: getProportionateScreenHeight(40),
+                                height: getProportionateScreenHeight(10),
                               ),
+
                               ConditionalBuilder(
                                 condition: state is! EbnakRegisterLoadingState,
                                 builder: (context) =>
@@ -236,6 +278,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                             name: nameController.text,
                                             phone: phoneController.text,
                                             address: addressController.text,
+                                            haveChildren: _value,
                                           );
                                         }
                                       },
