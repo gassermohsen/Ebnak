@@ -101,12 +101,7 @@ class _AddmemberScreenState extends State<AddmemberScreen> {
                           ),
                         ),
 
-                        SizedBox(height: getProportionateScreenHeight(30),),
-                        if(state is EbnakCreateMemberLoadingState)
-                          LinearProgressIndicator(
-                            color: kPrimaryColor,
-                            backgroundColor: Colors.white,
-                          ),
+
                         SizedBox(height: getProportionateScreenHeight(20),),
 
 
@@ -199,6 +194,13 @@ class _AddmemberScreenState extends State<AddmemberScreen> {
                               height: getProportionateScreenHeight(100),
                               child: buildInformationFormField()),
                         ),
+
+                        SizedBox(height: getProportionateScreenHeight(30),),
+                        if(state is EbnakCreateMemberLoadingState)
+                          LinearProgressIndicator(
+                            color: kPrimaryColor,
+                            backgroundColor: Colors.white,
+                          ),
                         SizedBox(height: getProportionateScreenHeight(20),),
                         Row(
                           children: [

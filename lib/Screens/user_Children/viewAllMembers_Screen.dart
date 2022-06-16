@@ -48,7 +48,7 @@ class _viewAllmembers extends State<viewAllmembers> {
                     FutureBuilder(
                       future: FirebaseFirestore.instance.collection('users').doc(uId).collection('userMembers').get(),
                       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-                        if(snapshot.hasData){
+                        if(snapshot.data.docs.length >= 1){
                           EbnakCubit
                               .get(context)
                               .userMembers = [];
@@ -64,30 +64,37 @@ class _viewAllmembers extends State<viewAllmembers> {
 
                           }
                           return Positioned(
-                          left: 20,
-                          top: 180,
-                          child: CircleAvatar(
-                            radius: 20,
-                            backgroundColor: Colors.grey[400],
-                            backgroundImage:NetworkImage(
-                                EbnakCubit.get(context).userMembers![0].memberImage
-                            ),
+                          left: 25,
+                          top: 160,
+                          child: Column(
+                            children: [
+                              Text(EbnakCubit.get(context).userMembers![0].fullName??'',style: TextStyle(color: Colors.white,fontStyle: FontStyle.italic,fontSize: 12),),
+
+                              CircleAvatar(
+                                radius: 20,
+                                backgroundColor: Colors.grey[200],
+                                backgroundImage:NetworkImage(
+                                    EbnakCubit.get(context).userMembers![0].memberImage
+                                ),
+                              ),
+                              Text(EbnakCubit.get(context).userMembers![0].fullName??'',style: TextStyle(color: Colors.white,fontStyle: FontStyle.italic,fontSize: 12),),
+                            ],
                           ),
                             );
 
                         }
                         else{
-                          return CircularProgressIndicator();
+                          return Text('');
                         }
 
 
                       },
                     ),
-                  if(EbnakCubit.get(context).userMembers.length >=2)
+                  // if(EbnakCubit.get(context).userMembers.length >=2)
                   FutureBuilder(
                     future: FirebaseFirestore.instance.collection('users').doc(uId).collection('userMembers').get(),
                     builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-                      if(snapshot.hasData){
+                      if(snapshot.data.docs.length >= 2){
                         EbnakCubit
                             .get(context)
                             .userMembers = [];
@@ -105,29 +112,35 @@ class _viewAllmembers extends State<viewAllmembers> {
                         return Positioned(
                           left: 80,
                           top: 120,
-                          child: CircleAvatar(
-                            radius: 25,
-                            backgroundColor: Colors.grey[400],
-                            backgroundImage:NetworkImage(
-                                EbnakCubit.get(context).userMembers![1].memberImage
-                            ),
+                          child: Column(
+                            children: [
+                              CircleAvatar(
+                                radius: 25,
+                                backgroundColor: Colors.grey[400],
+                                backgroundImage:NetworkImage(
+                                    EbnakCubit.get(context).userMembers![1].memberImage
+                                ),
+                              ),
+                              Text(EbnakCubit.get(context).userMembers![1].fullName??'',style: TextStyle(color: Colors.white,fontStyle: FontStyle.italic,fontSize: 12),)
+
+                            ],
                           ),
                         );
 
                       }
                       else{
-                        return CircularProgressIndicator();
+                        return Text('');
                       }
 
 
                     },
                   ),
 
-                  if(EbnakCubit.get(context).userMembers.length >=3)
+                  // if(EbnakCubit.get(context).userMembers.length >=3)
                     FutureBuilder(
                       future: FirebaseFirestore.instance.collection('users').doc(uId).collection('userMembers').get(),
                       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-                        if(snapshot.hasData){
+                        if(snapshot.data.docs.length >= 3){
                           EbnakCubit
                               .get(context)
                               .userMembers = [];
@@ -144,30 +157,36 @@ class _viewAllmembers extends State<viewAllmembers> {
                           }
                           return Positioned(
                             left: 150,
-                            top: 90,
-                            child: CircleAvatar(
-                              radius: 25,
-                              backgroundColor: Colors.grey[400],
-                              backgroundImage:NetworkImage(
-                                  EbnakCubit.get(context).userMembers![2].memberImage
-                              ),
+                            top: 75,
+                            child: Column(
+                              children: [
+                                Text(EbnakCubit.get(context).userMembers![2].fullName??'',style: TextStyle(color: Colors.white,fontStyle: FontStyle.italic,fontSize: 12),),
+                                CircleAvatar(
+                                  radius: 25,
+                                  backgroundColor: Colors.grey[400],
+                                  backgroundImage:NetworkImage(
+                                      EbnakCubit.get(context).userMembers![2].memberImage
+                                  ),
+                                ),
+
+                              ],
                             ),
                           );
 
                         }
                         else{
-                          return CircularProgressIndicator();
+                          return Text('');
                         }
 
 
                       },
                     ),
 
-                  if(EbnakCubit.get(context).userMembers.length >=4)
+                  // if(EbnakCubit.get(context).userMembers.length <=4)
                     FutureBuilder(
                       future: FirebaseFirestore.instance.collection('users').doc(uId).collection('userMembers').get(),
                       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-                        if(snapshot.hasData){
+                        if( snapshot.data.docs.length >= 4){
                           EbnakCubit
                               .get(context)
                               .userMembers = [];
@@ -185,29 +204,35 @@ class _viewAllmembers extends State<viewAllmembers> {
                           return Positioned(
                             left: 210,
                             top: 120,
-                            child: CircleAvatar(
-                              radius: 25,
-                              backgroundColor: Colors.grey[400],
-                              backgroundImage:NetworkImage(
-                                  EbnakCubit.get(context).userMembers![3].memberImage
-                              ),
+                            child: Column(
+                              children: [
+                                CircleAvatar(
+                                  radius: 25,
+                                  backgroundColor: Colors.grey[400],
+                                  backgroundImage:NetworkImage(
+                                      EbnakCubit.get(context).userMembers![3].memberImage
+                                  ),
+                                ),
+                                Text(EbnakCubit.get(context).userMembers![3].fullName??'',style: TextStyle(color: Colors.white,fontStyle: FontStyle.italic,fontSize: 12),)
+
+                              ],
                             ),
                           );
 
                         }
                         else{
-                          return CircularProgressIndicator();
+                          return Text('');
                         }
 
 
                       },
                     ),
 
-                  if(EbnakCubit.get(context).userMembers.length >=5)
+                  // if(EbnakCubit.get(context).userMembers.length <=5)
                     FutureBuilder(
                       future: FirebaseFirestore.instance.collection('users').doc(uId).collection('userMembers').get(),
                       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-                        if(snapshot.hasData){
+                        if(snapshot.data.docs.length >= 5){
                           EbnakCubit
                               .get(context)
                               .userMembers = [];
@@ -223,31 +248,37 @@ class _viewAllmembers extends State<viewAllmembers> {
 
                           }
                           return Positioned(
-                            left: 270,
-                            top: 80,
-                            child: CircleAvatar(
-                              radius: 25,
-                              backgroundColor: Colors.grey[400],
-                              backgroundImage:NetworkImage(
-                                  EbnakCubit.get(context).userMembers![4].memberImage
-                              ),
+                            left: 265,
+                            top: 75,
+                            child: Column(
+                              children: [
+                                Text(EbnakCubit.get(context).userMembers![4].fullName??'',style: TextStyle(color: Colors.white,fontStyle: FontStyle.italic,fontSize: 12),),
+                                CircleAvatar(
+                                  radius: 25,
+                                  backgroundColor: Colors.grey[400],
+                                  backgroundImage:NetworkImage(
+                                      EbnakCubit.get(context).userMembers![4].memberImage
+                                  ),
+                                ),
+
+                              ],
                             ),
                           );
 
                         }
                         else{
-                          return CircularProgressIndicator();
+                          return Text('');
                         }
 
 
                       },
                     ),
 
-                  if(EbnakCubit.get(context).userMembers.length >=6)
+                  // if(EbnakCubit.get(context).userMembers.length <=6)
                     FutureBuilder(
                       future: FirebaseFirestore.instance.collection('users').doc(uId).collection('userMembers').get(),
                       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-                        if(snapshot.hasData){
+                        if(snapshot.data.docs.length >= 6){
                           EbnakCubit
                               .get(context)
                               .userMembers = [];
@@ -264,19 +295,26 @@ class _viewAllmembers extends State<viewAllmembers> {
                           }
                           return Positioned(
                             left: 310,
-                            top: 150,
-                            child: CircleAvatar(
-                              radius: 25,
-                              backgroundColor: Colors.grey[400],
-                              backgroundImage:NetworkImage(
-                                  EbnakCubit.get(context).userMembers![5].memberImage
-                              ),
+                            top: 140,
+                            child: Column(
+                              children: [
+                                CircleAvatar(
+                                  radius: 25,
+                                  backgroundColor: Colors.grey[400],
+                                  backgroundImage:NetworkImage(
+                                      EbnakCubit.get(context).userMembers![5].memberImage
+                                  ),
+                                ),
+                                Text(EbnakCubit.get(context).userMembers![5].fullName??'',style: TextStyle(color: Colors.white,fontStyle: FontStyle.italic,fontSize: 12),),
+
+
+                              ],
                             ),
                           );
 
                         }
                         else{
-                          return CircularProgressIndicator();
+                          return Text('');
                         }
 
 

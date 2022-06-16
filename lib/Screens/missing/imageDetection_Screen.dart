@@ -10,6 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../Size_config/size_config.dart';
 import '../../constants/constants.dart';
 import '../../layout/ebnak/ebnak_layout.dart';
+import 'adoptDetectionDetails_Screen.dart';
 import 'detectionDetails_Screen.dart';
 import 'missing_Screen.dart';
 import 'noMatching_Screen.dart';
@@ -26,6 +27,12 @@ class ImageDetectionScreen extends StatelessWidget {
         }
         if(state is EbnakDetectionErrorState){
           PushReplacment(context, NoMatchingScreen());
+        }
+        if(state is EbnakGetDetectedErrorState && state is EbnakGetDetectedAdoptErrorState){
+          PushReplacment(context, NoMatchingScreen());
+        }
+        if(state is EbnakGetDetectedAdoptSuccessState){
+          PushReplacment(context, adoptDetectionDetailsScreen());
         }
       },
       builder: (context, state) {

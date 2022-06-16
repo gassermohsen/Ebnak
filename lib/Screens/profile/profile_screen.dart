@@ -222,7 +222,7 @@ class profileScreen extends StatelessWidget {
                                                     .get(context)
                                                     .Userposts
                                                     .add(PostModel.fromSnapShot(
-                                                    snapshot.data!.docs![i]));
+                                                    snapshot.data!.docs[i]));
                                                 snapshot.data!.docs.forEach((element) {
                                                   EbnakCubit
                                                       .get(context)
@@ -754,7 +754,7 @@ class profileScreen extends StatelessWidget {
                                                             .add(commentModel
                                                             .fromSnapShot(
                                                             snapshot.data!
-                                                                .docs![i]));
+                                                                .docs[i]));
                                                       }
                                                       print(EbnakCubit
                                                           .get(context)
@@ -1010,7 +1010,7 @@ class profileScreen extends StatelessWidget {
                                                           .add(commentModel
                                                           .fromSnapShot(
                                                           snapshot.data!
-                                                              .docs![i]));
+                                                              .docs[i]));
                                                     }
                                                     print(EbnakCubit
                                                         .get(context)

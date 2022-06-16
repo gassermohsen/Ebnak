@@ -799,7 +799,8 @@ Future<addFaceModel?> addFace(
          trainList();
         await detectFace(value);
         await FindSimilar(DetectModel?.faceId);
-        getDetection();
+        await  getDetectionAdoption();
+          getDetection();
 
 
 
@@ -912,16 +913,54 @@ emit(EbnakFindSimilarLoadingState());
           "persistedFaceId", whereIn: [findSimilarModel[0].persistedFaceId,])
           .get()
           .then((value) {
-        emit(EbnakGetDetectedSuccessState());
-        getDetectionInfo = [];
-        value.docs.forEach((element) {
-          getDetectionInfo.add(reportMissingModel.FromJson(element.data()));
-          print(getDetectionInfo.length);
-        });
+            if(value.docs.isNotEmpty){
+              getDetectionInfo = [];
+              value.docs.forEach((element) {
+                getDetectionInfo.add(reportMissingModel.FromJson(element.data()));
+                print(getDetectionInfo.length);
+              });
+              emit(EbnakGetDetectedSuccessState());
+            }
+
+          if(value.docs.isEmpty){
+            emit(EbnakGetDetectedErrorState());
+
+          }
+
       }).catchError((onError) {
         emit(EbnakGetDetectedErrorState());
         print(onError);
       });
+
+  }
+
+  late List<reportMissingModel>getDetectionAdoptionInfo;
+
+
+  Future getDetectionAdoption(){
+    emit(EbnakGetDetectedAdoptLoadingState());
+    return FirebaseFirestore.instance.collection('orphanageReports').where(
+        "persistedFaceId", whereIn: [findSimilarModel[0].persistedFaceId,])
+        .get()
+        .then((value) {
+       if(value.docs.isNotEmpty){
+      getDetectionAdoptionInfo = [];
+      value.docs.forEach((element) {
+        getDetectionAdoptionInfo.add(reportMissingModel.FromJson(element.data()));
+        print(getDetectionAdoptionInfo.length);
+      });
+
+      emit(EbnakGetDetectedAdoptSuccessState());}
+
+       if(value.docs.isEmpty){
+         emit(EbnakGetDetectedAdoptErrorState());
+
+
+       }
+    }).catchError((onError) {
+      emit(EbnakGetDetectedAdoptErrorState());
+      print(onError);
+    });
 
   }
 

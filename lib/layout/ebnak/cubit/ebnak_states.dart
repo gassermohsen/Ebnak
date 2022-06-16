@@ -151,6 +151,12 @@ class EbnakGetDetectedSuccessState extends EbnakStates {}
 class EbnakGetDetectedErrorState extends EbnakStates {}
 
 
+// get Adoption Detected
+class EbnakGetDetectedAdoptLoadingState extends EbnakStates {}
+class EbnakGetDetectedAdoptSuccessState extends EbnakStates {}
+class EbnakGetDetectedAdoptErrorState extends EbnakStates {}
+
+
 
 //Delete Post
 
