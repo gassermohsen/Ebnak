@@ -11,6 +11,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../layout/ebnak/ebnak_layout.dart';
+import '../user_Children/add_Member_Screen.dart';
+
 class EditProfileScreen extends StatelessWidget {
   var nameController = TextEditingController();
   var bioController = TextEditingController();
@@ -166,6 +169,82 @@ class EditProfileScreen extends StatelessWidget {
                       height: getProportionateScreenHeight(20),
                     ),
                     buildBioFormField(),
+                    SizedBox(
+                      height: getProportionateScreenHeight(20),
+                    ),
+
+                    Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 15.0,top: 10,bottom: 10,right: 10),
+                          child: Align(
+                            alignment: AlignmentDirectional.bottomStart,
+                            child: Container(
+                              width: getProportionateScreenWidth(160),
+                              height: getProportionateScreenHeight(60),
+
+                              child: OutlinedButton(onPressed: (){
+
+                                navigateAndFinish(context, EbnakLayout());
+
+                              },
+                                clipBehavior: Clip.hardEdge,
+                                style: OutlinedButton.styleFrom(
+                                  side: BorderSide(
+                                    width: 2.0,
+                                    color: Colors.grey,
+                                    style: BorderStyle.solid,
+                                  ),
+
+                                  shape:  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(Radius.circular(10),
+
+                                    ),
+                                  ),
+
+
+                                ),
+
+                                child: Text('Update Family ',style: TextStyle(color: Colors.black87,fontWeight: FontWeight.bold),),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 10,bottom: 10,left: 15),
+                          child: Align(
+                            alignment: AlignmentDirectional.bottomEnd,
+                            child: Container(
+                              width: getProportionateScreenWidth(160),
+                              height: getProportionateScreenHeight(60),
+                              child: ElevatedButton(onPressed: () async {
+                                PushReplacment(context, AddmemberScreen());
+
+                              },
+                                child: Text('Add New Member',style: TextStyle(color: Colors.white),),
+                                clipBehavior: Clip.hardEdge,
+
+                                style: ElevatedButton.styleFrom(
+                                  shape:RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(Radius.circular(10),
+
+                                    ),
+
+                                  ),
+                                  primary: kPrimaryColor,
+
+
+                                ),
+
+                              ),
+                            ),
+                          ),
+                        ),
+
+
+                      ],
+                    ),
+
 
 
                   ],

@@ -65,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
   },
   builder: (context, state) {
     return  Scaffold(
-        backgroundColor: Colors.grey[100],
+        backgroundColor: Colors.white,
 
 
         body: SingleChildScrollView(
@@ -118,68 +118,111 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 ],
               ),
+
               SizedBox(height: getProportionateScreenHeight(25),),
-
-
-
-              Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8.0,top: 10),
-                    child: Container(
-                      width: getProportionateScreenWidth(175),
-                      height: getProportionateScreenHeight(100),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                          gradient: LinearGradient(
-                            begin: Alignment.topRight,
-                            end: Alignment.bottomLeft,
-                            colors: [
-                              Colors.red,
-                              Colors.black,
-                            ],
-                          )                      ),
-                      child: Center(child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text('Missing ',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.white),),
-                          Text('21',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.white),),
-
-
-                        ],
-                      )),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8.0,top: 10),
-                    child: Container(
-                      width: getProportionateScreenWidth(175),
-                      height: getProportionateScreenHeight(100),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                          gradient: LinearGradient(
-                            begin: Alignment.topRight,
-                            end: Alignment.bottomLeft,
-                            colors: [
-                              kPrimaryColor,
-                              Colors.grey.shade300,
-                            ],
-                          )
-                      ),
-                      child: Center(child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text('Adopted ',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.white),),
-                          Text('21',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.white),),
-
-
-                        ],
-                      )),
-                    ),
-                  ),
-                ],
+              Divider(
+                height: 3,
+                color: Colors.grey,
+                thickness: 1,
+                indent: 25,
+                endIndent: 25,
               ),
 
+
+
+              // Row(
+              //   children: [
+              //
+              //     Padding(
+              //       padding: const EdgeInsets.only(left: 8.0,top: 10),
+              //       child: Container(
+              //         width: getProportionateScreenWidth(360),
+              //         height: getProportionateScreenHeight(70),
+              //         decoration: BoxDecoration(
+              //           borderRadius: BorderRadius.circular(10),
+              //             gradient: LinearGradient(
+              //               begin: Alignment.topRight,
+              //               end: Alignment.bottomLeft,
+              //               colors: [
+              //                 Colors.grey.shade300,
+              //                 kPrimaryColor,
+              //
+              //               ],
+              //             )
+              //         ),
+              //         child: Center(child: Column(
+              //           mainAxisAlignment: MainAxisAlignment.center,
+              //           children: [
+              //             Text('Children Adopted From The App',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.white),),
+              //             Text('21',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.white),),
+              //
+              //
+              //           ],
+              //         )),
+              //       ),
+              //     ),
+              //   ],
+              // ),
+              //         Row(
+              //           children: [
+              //             Padding(
+              //                             padding: const EdgeInsets.only(left: 8.0,top: 10),
+              //                             child: Container(
+              //                               width: getProportionateScreenWidth(175),
+              //                               height: getProportionateScreenHeight(100),
+              //                               decoration: BoxDecoration(
+              //                                 borderRadius: BorderRadius.circular(10),
+              //                                   gradient: LinearGradient(
+              //                                     begin: Alignment.topRight,
+              //                                     end: Alignment.bottomLeft,
+              //                                     colors: [
+              //                                       Colors.blueGrey,
+              //                                       Colors.red,
+              //
+              //                                     ],
+              //                                   )                      ),
+              //                               child: Center(child: Column(
+              //                                 mainAxisAlignment: MainAxisAlignment.center,
+              //                                 children: [
+              //                                   Text('Missing ',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.white),),
+              //                                   Text('21',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.white),),
+              //
+              //
+              //                                 ],
+              //                               )),
+              //                             ),
+              //                           ),
+              //             Padding(
+              //               padding: const EdgeInsets.only(left: 8.0,top: 10),
+              //               child: Container(
+              //                 width: getProportionateScreenWidth(175),
+              //                 height: getProportionateScreenHeight(100),
+              //                 decoration: BoxDecoration(
+              //                     borderRadius: BorderRadius.circular(10),
+              //                     gradient: LinearGradient(
+              //                       begin: Alignment.topRight,
+              //                       end: Alignment.bottomLeft,
+              //                       colors: [
+              //                         Colors.yellow,
+              //                         Colors.grey,
+              //
+              //                       ],
+              //                     )                      ),
+              //                 child: Center(child: Column(
+              //                   mainAxisAlignment: MainAxisAlignment.center,
+              //                   children: [
+              //                     Text('Total Children ',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.white),),
+              //                     Text('30',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.white),),
+              //
+              //
+              //                   ],
+              //                 )),
+              //               ),
+              //             ),
+              //
+              //
+              //           ],
+              //         ),
 
 
               Padding(
@@ -255,6 +298,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: Colors.grey.shade400,
+                      style: BorderStyle.solid,
+                      width: 1.0,
+                    ),
 
                   ),
                   child: Row(
@@ -326,6 +374,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 width: getProportionateScreenWidth(250),
 
                 child: Card(
+                  elevation: 5,
                 color: Colors.white,
                 shape: RoundedRectangleBorder(
                 side: BorderSide(color: Colors.white70, width: 1),

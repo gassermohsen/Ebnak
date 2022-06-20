@@ -234,7 +234,7 @@ class _AddmemberScreenState extends State<AddmemberScreen> {
 
                                     ),
 
-                                    child: Text('Done',style: TextStyle(color: Colors.black87),),
+                                    child: Text('Finish',style: TextStyle(color: Colors.black87),),
                                   ),
                                 ),
                               ),
@@ -268,7 +268,7 @@ class _AddmemberScreenState extends State<AddmemberScreen> {
 
                                     }
                                   },
-                                    child: Text('Add New Member',style: TextStyle(color: Colors.white),),
+                                    child: Text('Save Info ',style: TextStyle(color: Colors.white),),
                                     clipBehavior: Clip.hardEdge,
 
                                     style: ElevatedButton.styleFrom(
