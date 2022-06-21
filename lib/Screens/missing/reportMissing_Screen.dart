@@ -65,6 +65,7 @@ class _ReportMissingScreenState extends State<ReportMissingScreen> {
         if(state is EbnakCreateReportSuccessState){
           showToast(text: "Report Uploaded Successfully", state: ToastStates.SUCCESS);
           Navigator.pop(context);
+          EbnakCubit.get(context).reportMissingImage==null;
         }
 
       },
