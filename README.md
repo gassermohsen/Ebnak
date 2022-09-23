@@ -1,7 +1,6 @@
-# ebnak1
+# ebnak
 
-A new Flutter project.
-
+Flutter Project that helps people to adopt children and find their missing one 
 ## Getting Started
 
 This project is a starting point for a Flutter application.
